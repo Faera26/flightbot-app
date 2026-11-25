@@ -1,0 +1,1436 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://telegram.org https://autocomplete.travelpayouts.com; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<title>Дешёвые авиабилеты</title>
+<style>
+:root{--sel:#0868D6;--sel-text:#FFFFFF;--bg:#EFEFF4;--section:#FFFFFF;--text:#000000;--muted:#66666B;--hint:#AEAEB2;--accent:#0868D6;--button:#0868D6;--button-text:#FFFFFF;--sep:#D8D8DC;--danger:#D92D20;--deal:#0E7A3E;--deal-bg:#E3F4EA;--warn:#B25E00;--road:#8FB8F2;--fill:#E4E4EA;--other:#B4B4BA;--seg:#FFFFFF;--range:#CFE0F7;--switch-off:#E4E4EA;--safe-bottom:env(safe-area-inset-bottom,0px)}
+:root.dark{--sel:#2A6CD6;--sel-text:#FFFFFF;--bg:#000000;--section:#1C1C1E;--text:#FFFFFF;--muted:#98989E;--hint:#636366;--accent:#4C94F8;--button:#2A6CD6;--button-text:#FFFFFF;--sep:#38383A;--danger:#FF6961;--deal:#5BE08E;--deal-bg:#173D26;--warn:#FFB340;--road:#3B6AA8;--fill:#2C2C2E;--other:#5A5A5F;--seg:#5A5A5F;--range:#1D3557;--switch-off:#39393D}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:17px/22px -apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+button,input,select{font:inherit;color:inherit;margin:0}
+button{cursor:pointer}
+a{color:var(--accent);text-decoration:none}
+:focus{outline:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#app{max-width:640px;margin:0 auto;padding:16px 16px calc(24px + var(--safe-bottom));display:flex;flex-direction:column;gap:24px}
+body.pagebar #app{padding-bottom:calc(100px + var(--safe-bottom))}
+body.pageback #app{padding-top:8px}
+.h1{margin:0;font-size:28px;line-height:34px;font-weight:700;letter-spacing:-.4px;overflow-wrap:anywhere}
+.hero{display:flex;flex-direction:column;gap:6px;padding:0 4px}
+.hero-row{display:flex;align-items:center;gap:12px;padding:0 4px}
+.lead{margin:0;font-size:15px;line-height:20px;color:var(--muted)}
+.cap{margin:0 0 0 16px;font-size:13px;line-height:18px;font-weight:400;color:var(--muted)}
+.note{margin:0 16px;font-size:13px;line-height:18px;color:var(--muted)}
+.group{display:flex;flex-direction:column;gap:8px}
+.card{background:var(--section);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.pad{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.list>*+*{background-image:linear-gradient(var(--sep),var(--sep));background-size:calc(100% - 16px) .5px;background-position:right top;background-repeat:no-repeat}
+.list.icons>*+*{background-size:calc(100% - 64px) .5px}
+.list.inset68>*+*{background-size:calc(100% - 68px) .5px}
+.row{display:flex;align-items:center;gap:12px;min-height:44px;padding:11px 12px 11px 16px;width:100%;border:0;background-color:transparent;text-align:left;color:var(--text);font-size:17px;line-height:22px}
+.row.tall{min-height:60px;padding-top:8px;padding-bottom:8px}
+.row .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.row .title{font-size:17px;line-height:22px;overflow-wrap:anywhere}
+.row .title.b{font-weight:600}
+.row .sub{font-size:13px;line-height:18px;color:var(--muted);overflow-wrap:anywhere}
+.row .val{color:var(--muted);text-align:right}
+.row .chev{flex:none;color:var(--hint)}
+.row.act{color:var(--accent)}
+.row.danger{color:var(--danger)}
+.row:disabled{opacity:.45;cursor:default}
+.tile{flex:none;width:36px;height:36px;border-radius:10px;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;letter-spacing:.3px;color:var(--muted)}
+.tile svg{width:20px;height:20px}
+.right{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.price{font-size:17px;line-height:22px;font-weight:600}
+.badge{font-size:12px;line-height:16px;font-weight:700;color:var(--deal);background:var(--deal-bg);border-radius:6px;padding:1px 6px;white-space:nowrap}
+.badge.weak{color:var(--muted);background:var(--fill);font-weight:600}
+.muted{color:var(--muted)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:4px;background:var(--deal);flex:none}
+.dot.off{background:var(--hint)}
+.dot.warn{background:var(--warn)}
+.status{display:flex;align-items:center;gap:8px}
+.icon-btn{flex:none;width:44px;height:44px;border-radius:22px;border:0;background:var(--section);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.link{border:0;background:none;padding:0;color:var(--accent);font-size:inherit;line-height:inherit}
+.big{font-size:34px;line-height:40px;font-weight:700;letter-spacing:-.5px}
+.kv{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;row-gap:10px;column-gap:12px;font-size:15px;line-height:20px}
+.kv dd{margin:0;text-align:right}
+.hr{height:.5px;background:var(--sep)}
+.legs{display:grid;grid-template-columns:64px minmax(0,1fr) 76px;align-items:center;gap:8px}
+.legs .t{font-size:20px;line-height:25px;font-weight:600}
+.legs .c{font-size:13px;line-height:18px;color:var(--muted)}
+.line{width:100%;display:flex;align-items:center}
+.line i{flex:1;height:1.5px;background:var(--sep)}
+.line b{width:6px;height:6px;border-radius:3px;background:var(--muted)}
+.line u{width:7px;height:7px;border-radius:4px;border:1.5px solid var(--muted);background:var(--section)}
+.door{display:flex;flex-direction:column;gap:6px}
+.door .lbl{display:flex;align-items:baseline;gap:8px;font-size:15px;line-height:20px}
+.door .code{width:40px;font-weight:600;color:var(--muted)}
+.door .city{flex:1;min-width:0;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.door.best .code{font-weight:700;color:var(--text)}
+.door.best .city{color:var(--text)}
+.door.best .sum{font-weight:700}
+.door .sum{color:var(--muted)}
+.door.best .sum{color:var(--text)}
+.bar{display:flex;height:8px;gap:2px}
+.bar .t{background:var(--other);border-radius:4px 0 0 4px}
+.bar .r{background:repeating-linear-gradient(135deg,var(--other) 0 2px,transparent 2px 4px);box-shadow:inset 0 0 0 1px var(--other);border-radius:0 4px 4px 0}
+.bar .t:last-child{border-radius:4px}
+.door.best .bar .t{background:var(--accent)}
+.door.best .bar .r{background:repeating-linear-gradient(135deg,var(--road) 0 2px,transparent 2px 4px);box-shadow:inset 0 0 0 1px var(--road)}
+.legend{display:flex;gap:16px;font-size:13px;line-height:18px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:14px;height:8px;border-radius:2px;background:var(--accent)}
+.legend i.r{background:repeating-linear-gradient(135deg,var(--road) 0 2px,transparent 2px 4px);box-shadow:inset 0 0 0 1px var(--road)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:2px;padding:2px;height:36px;border-radius:9px;background:var(--fill)}
+.seg.small{height:32px;border-radius:8px;width:auto}
+.seg button{border:0;border-radius:7px;background:transparent;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px}
+.seg.small button{font-size:13px;border-radius:6px}
+.seg button[aria-pressed="true"]{background:var(--seg);box-shadow:0 1px 3px rgba(0,0,0,.14);font-weight:600}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips.five{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.chips.five .chip{padding:0}
+.chip{height:36px;padding:0 14px;border-radius:18px;border:1px solid var(--sep);background:var(--section);font-size:15px}
+.chip[aria-pressed="true"]{background:var(--sel);border-color:var(--sel);color:var(--sel-text);font-weight:600}
+.switch{flex:none;width:51px;height:31px;border-radius:16px;padding:2px;border:0;background:var(--switch-off);display:flex;justify-content:flex-start}
+.switch[aria-checked="true"]{background:var(--accent);justify-content:flex-end}
+.switch::after{content:"";width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.stepper{display:flex;align-items:center;gap:8px;flex:none}
+.stepper button{width:44px;height:44px;border-radius:22px;border:0;background:var(--fill);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.stepper button:disabled{color:var(--hint);cursor:default}
+.stepper output{width:28px;text-align:center;font-weight:600}
+.field{display:flex;align-items:center;gap:12px;min-height:52px;padding:6px 16px}
+.field label{flex:1;font-size:17px}
+.field input{width:130px;height:36px;border:0;padding:0;background:none;color:var(--text);font-size:17px;text-align:right}
+.field input::placeholder{color:var(--muted)}
+.field .unit{color:var(--muted)}
+.search{height:40px;padding:0 4px 0 10px;border-radius:10px;background:var(--fill);display:flex;align-items:center;gap:6px}
+.search input{flex:1;min-width:0;height:36px;border:0;padding:0;background:none;color:var(--text);font-size:17px}
+.search input::placeholder{color:var(--muted)}
+.search input::-webkit-search-cancel-button{display:none}
+.search input:focus-visible,.field input:focus-visible{outline:none}
+.search:focus-within{box-shadow:0 0 0 2px var(--accent)}
+.search button{width:36px;height:36px;border:0;background:none;display:flex;align-items:center;justify-content:center}
+.slider{position:relative;height:28px}
+.slider .track,.slider .fill{position:absolute;top:12px;height:4px;border-radius:2px}
+.slider .track{left:0;right:0;background:var(--fill)}
+.slider .fill{background:var(--accent)}
+.slider input{position:absolute;inset:0;width:100%;height:28px;margin:0;background:none;-webkit-appearance:none;appearance:none;pointer-events:none}
+.slider input::-webkit-slider-runnable-track{height:28px;background:none}
+.slider input::-moz-range-track{height:28px;background:none}
+.slider input::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:28px;height:28px;border-radius:14px;background:#fff;border:.5px solid var(--sep);box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.slider input::-moz-range-thumb{pointer-events:auto;width:28px;height:28px;border-radius:14px;background:#fff;border:.5px solid var(--sep);box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.slider input:focus-visible::-webkit-slider-thumb{outline:2px solid var(--accent);outline-offset:2px}
+.scale{display:flex;justify-content:space-between;font-size:12px;line-height:16px;color:var(--muted)}
+.cal-head{display:flex;align-items:center;justify-content:space-between}
+.cal-head button{width:44px;height:36px;border:0;background:none;color:var(--accent);display:flex;align-items:center;justify-content:center}
+.cal-head button:disabled{color:var(--hint)}
+.cal-wd,.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));text-align:center}
+.cal-wd{font-size:12px;line-height:16px;color:var(--muted)}
+.cal{row-gap:2px;font-size:17px}
+.cal button{height:40px;border:0;background:none;padding:0}
+.cal button:disabled{color:var(--hint);cursor:default}
+.cal button.in{background:var(--range)}
+.cal button.a,.cal button.z{background:var(--sel);color:var(--sel-text);font-weight:600}
+.cal button.a{border-radius:20px 0 0 20px}
+.cal button.z{border-radius:0 20px 20px 0}
+.cal button.a.z{border-radius:20px}
+.cal button.in.wk0{border-radius:12px 0 0 12px}
+.cal button.in.wk6{border-radius:0 12px 12px 0}
+.months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.months button{height:44px;border-radius:10px;border:1px solid var(--sep);background:var(--section);font-size:15px}
+.months button[aria-pressed="true"]{background:var(--sel);border-color:var(--sel);color:var(--sel-text);font-weight:600}
+.chart{position:relative;height:140px}
+.chart svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.chart .lbl{position:absolute;font-size:12px;line-height:16px;color:var(--muted);white-space:nowrap;background:var(--section);padding:0 3px;border-radius:4px}
+.chart .now{font-size:13px;line-height:18px;font-weight:700;color:var(--accent)}
+.chart .pt{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:var(--accent);box-shadow:0 0 0 2px var(--section)}
+.empty{padding:20px 16px;display:flex;flex-direction:column;gap:6px}
+.empty b{font-size:17px}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(16px + var(--safe-bottom));z-index:20;margin:0 auto;max-width:480px;padding:12px 16px;border-radius:12px;background:rgba(40,40,44,.94);color:#fff;font-size:15px;line-height:20px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+#pagebar{position:fixed;left:0;right:0;bottom:0;z-index:10;display:none;gap:8px;padding:8px 16px calc(8px + var(--safe-bottom));background:var(--bg);border-top:.5px solid var(--sep)}
+body.pagebar #pagebar{display:flex}
+#pagebar button{flex:1;height:50px;border-radius:12px;border:0;background:var(--button);color:var(--button-text);font-size:17px;font-weight:600}
+#pagebar button.second{background:var(--fill);color:var(--accent)}
+#pageback{display:none;height:44px;padding:0 8px;border:0;background:none;color:var(--accent);align-items:center;gap:2px;font-size:17px;margin:4px 0 0 8px}
+body.pageback #pageback{display:inline-flex}
+#dialog{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;padding:24px}
+#dialog.open{display:flex}
+#dialog .box{background:var(--section);border-radius:14px;max-width:320px;width:100%;overflow:hidden;text-align:center}
+#dialog p{margin:0;padding:18px 16px;font-size:15px;line-height:20px}
+#dialog .btns{display:flex;border-top:.5px solid var(--sep)}
+#dialog .btns button{flex:1;height:44px;border:0;background:none;color:var(--accent);font-size:17px}
+#dialog .btns button+button{border-left:.5px solid var(--sep);font-weight:600}
+.loading{padding:60px 16px;text-align:center;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.switch{transition:background-color .18s}}
+</style>
+</head>
+<body>
+<button type="button" id="pageback" aria-label="Назад"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Назад</button>
+<main id="app" aria-live="polite"><p class="loading">Загружаю…</p></main>
+<div id="pagebar"><button type="button" class="second" id="pb2"></button><button type="button" id="pb1"></button></div>
+<div id="dialog" role="dialog" aria-modal="true"><div class="box"><p id="dlg-text"></p><div class="btns" id="dlg-btns"></div></div></div>
+<script type="application/json" id="visa-data">/*VISA*/{"AD":["h","нужна шенгенская виза (въезд через Испанию или Францию)"],"AE":["f","без визы 90 дней"],"AF":["h","⚠️ небезопасно для туристов"],"AG":["f","без визы до 6 месяцев"],"AL":["e","электронная виза; без визы при шенгенской, британской или американской"],"AM":["f","без визы 180 дней, можно по внутреннему паспорту"],"AO":["f","без визы 30 дней"],"AR":["f","без визы 90 дней"],"AT":["h","нужна шенгенская виза"],"AU":["h","нужна австралийская виза (онлайн, с полной проверкой)"],"AW":["h","нужна нидерландская виза"],"AZ":["f","без визы 90 дней"],"BA":["f","без визы 30 дней"],"BB":["f","без визы 28 дней"],"BD":["e","виза по прилёту, 30 дней"],"BE":["h","нужна шенгенская виза"],"BF":["h","⚠️ небезопасно для туристов"],"BG":["h","нужна шенгенская виза"],"BH":["e","электронная виза или по прилёту"],"BI":["e","виза по прилёту с разрешением, оформленным онлайн"],"BJ":["e","электронная виза, 30 дней"],"BN":["f","без визы 14 дней"],"BO":["f","без визы 90 дней"],"BR":["f","без визы 90 дней"],"BS":["f","без визы 3 месяца"],"BT":["e","только через туроператора, сбор 100 $ за ночь"],"BW":["f","без визы 90 дней"],"BY":["f","без ограничений, можно по внутреннему паспорту"],"BZ":["f","без визы 90 дней"],"CA":["h","нужна канадская виза"],"CD":["e","электронная виза, 7 дней"],"CF":["h","нужна виза"],"CG":["h","нужна виза"],"CH":["h","нужна шенгенская виза"],"CI":["e","электронная виза, 3 месяца"],"CL":["f","без визы 90 дней"],"CM":["e","электронная виза"],"CN":["f","без визы 30 дней (пробный режим до конца 2027)"],"CO":["f","без визы 90 дней"],"CR":["f","без визы 90 дней"],"CU":["f","без визы 90 дней"],"CV":["f","без визы 60 дней · онлайн-регистрация за 5 дней и сбор ≈31 €"],"CW":["h","нужна нидерландская виза"],"CY":["h","нужна виза; можно въехать по действующей шенгенской"],"CZ":["h","туристам въезд закрыт"],"DE":["h","нужна шенгенская виза"],"DJ":["e","электронная виза, 90 дней"],"DK":["h","нужна шенгенская виза"],"DM":["f","без визы 90 дней"],"DO":["f","без визы 60 дней"],"DZ":["h","нужна виза"],"EC":["f","без визы 90 дней"],"EE":["h","туристам въезд закрыт"],"EG":["e","виза онлайн или по прилёту, 30 дней · на Синае до 15 дней без визы"],"ER":["h","нужна виза"],"ES":["h","нужна шенгенская виза"],"ET":["e","электронная виза или по прилёту в Аддис-Абебе, 90 дней"],"FI":["h","туристам въезд закрыт"],"FJ":["f","без визы 4 месяца"],"FM":["f","без визы 30 дней"],"FO":["h","нужна датская виза"],"FR":["h","нужна шенгенская виза"],"GA":["e","электронная виза, 90 дней"],"GB":["h","нужна британская виза"],"GD":["f","без визы 3 месяца"],"GE":["f","без визы до 1 года"],"GH":["e","электронная виза"],"GI":["h","нужна британская виза"],"GL":["h","нужна датская виза"],"GM":["h","нужна виза"],"GN":["e","электронная виза, 90 дней"],"GP":["h","нужна французская виза"],"GQ":["e","электронная виза"],"GR":["h","нужна шенгенская виза"],"GT":["f","без визы 90 дней"],"GU":["h","нужна американская виза"],"GW":["e","виза по прилёту, 90 дней"],"GY":["f","без визы 90 дней"],"HK":["f","без визы 14 дней"],"HN":["f","без визы 3 месяца"],"HR":["h","нужна шенгенская виза"],"HT":["h","⚠️ небезопасно для туристов"],"HU":["h","нужна шенгенская виза"],"ID":["e","виза по прилёту или e-VOA онлайн, 30 дней"],"IE":["h","нужна ирландская виза"],"IL":["e","электронное разрешение ETA-IL, 90 дней"],"IN":["e","электронная виза e-Visa, 30 дней"],"IQ":["h","⚠️ небезопасно для туристов"],"IR":["e","электронная виза, 30 дней · ⚠️ проверьте обстановку"],"IS":["h","нужна шенгенская виза"],"IT":["h","нужна шенгенская виза"],"JM":["f","без визы 90 дней"],"JO":["f","без визы 90 дней (с августа 2025)"],"JP":["h","нужна японская виза"],"KE":["e","электронное разрешение eTA (≈32 $), за 3 дня до поездки"],"KG":["f","без визы 90 дней из 180, можно по внутреннему паспорту"],"KH":["e","электронная виза или по прилёту, 30 дней"],"KI":["f","без визы 90 дней"],"KM":["e","виза по прилёту, 45 дней"],"KN":["e","электронное разрешение ETA, 90 дней"],"KP":["h","нужна виза"],"KR":["e","электронное разрешение K-ETA, 60 дней"],"KW":["h","нужна виза"],"KZ":["f","без визы 90 дней из 180, можно по внутреннему паспорту"],"LA":["f","без визы 30 дней"],"LB":["e","бесплатная виза по прилёту, 1 месяц · без израильских отметок"],"LC":["f","без визы 6 недель"],"LI":["h","нужна шенгенская виза"],"LK":["e","бесплатная ETA онлайн или по прилёту, 30 дней"],"LR":["e","e-VOA онлайн, 3 месяца"],"LS":["h","нужна виза"],"LT":["h","туристам въезд закрыт"],"LU":["h","нужна шенгенская виза"],"LV":["h","туристам въезд закрыт"],"LY":["h","⚠️ небезопасно для туристов"],"MA":["f","без визы 3 месяца"],"MC":["h","нужна шенгенская виза"],"MD":["f","без визы 90 дней из 180"],"ME":["h","нужна виза с 1 ноября 2026"],"MG":["e","электронная виза или по прилёту, до 90 дней"],"MH":["e","виза по прилёту, 90 дней"],"MK":["h","нужна виза; без визы 15 дней при шенгенской, британской или американской"],"ML":["h","⚠️ небезопасно для туристов"],"MM":["f","без визы 30 дней · в некоторых пунктах въезда нужна e-Visa"],"MN":["f","без визы 30 дней"],"MO":["f","без визы 30 дней"],"MQ":["h","нужна французская виза"],"MR":["e","электронная виза, 30 дней"],"MT":["h","нужна шенгенская виза"],"MU":["f","без визы 90 дней"],"MV":["f","без визы 90 дней"],"MW":["e","электронная виза, 90 дней"],"MX":["e","электронное разрешение (только при прилёте самолётом), до 180 дней"],"MY":["f","без визы 1 месяц"],"MZ":["e","электронное разрешение ETA (≈48 $), 30 дней"],"NA":["f","без визы 90 дней"],"NC":["h","нужна французская виза"],"NE":["h","нужна виза"],"NG":["e","электронная виза, 30 дней"],"NI":["f","без визы 90 дней · туристическая карта на границе (платно)"],"NL":["h","нужна шенгенская виза"],"NO":["h","туристам въезд закрыт"],"NP":["e","виза онлайн или по прилёту, до 90 дней"],"NR":["f","без визы 14 дней"],"NZ":["h","нужна виза (онлайн, с полной проверкой)"],"OM":["f","без визы 30 дней"],"PA":["f","без визы 90 дней"],"PE":["f","без визы 183 дня"],"PF":["h","нужна французская виза"],"PG":["e","электронная виза, 30 дней"],"PH":["f","без визы 30 дней"],"PK":["e","электронная виза, 3 месяца"],"PL":["h","туристам въезд закрыт"],"PR":["h","нужна американская виза"],"PT":["h","нужна шенгенская виза"],"PW":["f","без визы 30 дней"],"PY":["f","без визы 90 дней"],"QA":["f","без визы 90 дней"],"RE":["h","нужна французская виза"],"RO":["h","нужна шенгенская виза"],"RS":["f","без визы 30 дней"],"RW":["e","электронная виза или по прилёту, 30 дней"],"SA":["f","без визы 90 дней в году (с мая 2026; не для хаджа и умры)"],"SB":["e","электронная виза"],"SC":["e","электронная регистрация (≈10 €), 3 месяца"],"SD":["h","⚠️ небезопасно для туристов"],"SE":["h","нужна шенгенская виза"],"SG":["h","нужна виза через агента или приглашающего · транзит до 96 часов без визы"],"SI":["h","нужна шенгенская виза"],"SK":["h","нужна шенгенская виза"],"SL":["e","электронная виза или по прилёту"],"SM":["h","нужна шенгенская виза"],"SN":["e","виза по прилёту, 1 месяц"],"SO":["h","⚠️ небезопасно для туристов"],"SR":["f","без визы 90 дней · онлайн-сбор 50 $ до прилёта"],"SS":["h","⚠️ небезопасно для туристов"],"ST":["f","без визы 15 дней"],"SV":["f","без визы 180 дней"],"SX":["h","нужна нидерландская виза"],"SY":["h","⚠️ небезопасно для туристов"],"SZ":["f","без визы 30 дней"],"TD":["e","электронная виза"],"TG":["e","электронная виза, 15 дней"],"TH":["f","без визы 30 дней · за 3 дня до прилёта заполнить бесплатную карту TDAC"],"TJ":["f","без визы"],"TL":["e","виза по прилёту в Дили, 30 дней"],"TM":["h","нужна виза с приглашением"],"TN":["f","без визы 3 месяца"],"TO":["e","бесплатная виза по прилёту, 31 день"],"TR":["f","без визы 60 дней"],"TT":["f","без визы 90 дней"],"TV":["e","виза по прилёту, 1 месяц"],"TW":["h","нужна виза"],"TZ":["e","электронная виза или по прилёту, 90 дней"],"UA":["h","въезд практически невозможен"],"UG":["e","электронная виза, 3 месяца"],"US":["h","нужна американская виза"],"UY":["f","без визы 3 месяца"],"UZ":["f","без визы"],"VA":["h","нужна шенгенская виза"],"VC":["f","без визы 3 месяца"],"VE":["f","без визы 90 дней"],"VI":["h","нужна американская виза"],"VN":["f","без визы 45 дней (на Фукуоке — 30)"],"VU":["f","без визы 120 дней"],"WS":["f","без визы 60 дней"],"YE":["h","⚠️ небезопасно для туристов"],"ZA":["f","без визы 90 дней"],"ZM":["e","электронная виза или по прилёту, 90 дней"],"ZW":["e","электронная виза или по прилёту, 1 месяц"]}</script>
+<script>
+(function () {
+  'use strict';
+
+  // ================= мелочи =================
+  var NB = ' ';
+  var MONTHS = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+  var MONTHS_GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+  var MONTHS_SHORT = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+  var WEEKDAYS = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+  var KIND = { rt: 'туда-обратно', ow: 'в одну сторону', both: 'туда-обратно и в одну сторону' };
+  var BAG = { hand: 'ручная кладь', bag: 'с багажом', any: 'багаж не важен' };
+  var STOPS = { 0: 'только прямые', 1: 'не больше одной', 2: 'не больше двух' };
+  var VISA_TEXT = { f: 'без визы', e: 'простая виза', h: 'нужна виза' };
+  var VISA_DOT = { f: '', e: ' warn', h: ' off' };
+  var POPULAR = [['TH', 'Таиланд'], ['TR', 'Турция'], ['AE', 'ОАЭ'], ['VN', 'Вьетнам'], ['EG', 'Египет'], ['CN', 'Китай'], ['GE', 'Грузия'], ['LK', 'Шри-Ланка']];
+  var THRESHOLDS = [20, 30, 40, 50, 60];
+
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function money(v) {
+    if (v == null || isNaN(v)) return '—';
+    return String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, NB) + NB + '₽';
+  }
+  function plural(n, one, few, many) {
+    n = Math.abs(n) % 100; var d = n % 10;
+    if (n > 10 && n < 20) return many;
+    if (d > 1 && d < 5) return few;
+    if (d === 1) return one;
+    return many;
+  }
+  function count(n, one, few, many) { return n + NB + plural(n, one, few, many); }
+  function pax(p) {
+    var parts = [count(p[0], 'взрослый', 'взрослых', 'взрослых')];
+    if (p[1]) parts.push(count(p[1], 'ребёнок', 'ребёнка', 'детей'));
+    if (p[2]) parts.push(count(p[2], 'младенец', 'младенца', 'младенцев'));
+    return parts.join(', ');
+  }
+  function pd(iso) { var a = iso.slice(0, 10).split('-'); return new Date(+a[0], +a[1] - 1, +a[2]); }
+  function isoDay(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function addDays(d, n) { var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); return x; }
+  function monthEnd(d) { return new Date(d.getFullYear(), d.getMonth() + 1, 0); }
+  function dayShort(d) { return d.getDate() + NB + MONTHS_GEN[d.getMonth()]; }
+  function dayLong(d) { return WEEKDAYS[(d.getDay() + 6) % 7] + ', ' + d.getDate() + NB + MONTHS_GEN[d.getMonth()]; }
+  function rangeText(a, b) {
+    if (!b || a.getTime() === b.getTime()) return dayShort(a);
+    if (a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()) return a.getDate() + '–' + b.getDate() + NB + MONTHS_GEN[b.getMonth()];
+    return dayShort(a) + ' – ' + dayShort(b);
+  }
+  function windowText(df, dt) {
+    var a = pd(df), b = pd(dt);
+    if (a.getDate() === 1 && b.getTime() === monthEnd(a).getTime()) return MONTHS[a.getMonth()] + ' ' + a.getFullYear();
+    return rangeText(a, b);
+  }
+  function duration(min) {
+    if (!min) return '';
+    var h = Math.floor(min / 60), m = min % 60;
+    if (h && m) return h + NB + 'ч ' + m + NB + 'мин';
+    return h ? h + NB + 'ч' : m + NB + 'мин';
+  }
+  function ago(iso) {
+    if (!iso) return 'ещё не проверялось';
+    var t = Date.parse(iso);
+    if (isNaN(t)) return '';
+    var min = Math.floor((Date.now() - t) / 60000);
+    if (min < 1) return 'проверено только что';
+    if (min < 60) return 'проверено ' + count(min, 'минуту', 'минуты', 'минут') + ' назад';
+    var h = Math.floor(min / 60);
+    if (h < 48) return 'проверено ' + count(h, 'час', 'часа', 'часов') + ' назад';
+    return 'проверено ' + count(Math.floor(h / 24), 'день', 'дня', 'дней') + ' назад';
+  }
+  function foundDay(iso) {
+    if (!iso) return '';
+    var d = pd(iso), today = new Date(); today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var diff = Math.round((today - d) / 86400000);
+    if (diff === 0) return 'сегодня';
+    if (diff === 1) return 'вчера';
+    return dayShort(d);
+  }
+  function nights(o) {
+    if (!o.d2) return null;
+    return Math.round((pd(o.d2) - pd(o.d1)) / 86400000);
+  }
+  function door(o) { return (o.tot || 0) + (o.r ? o.r[0] : 0); }
+  function tomorrow() { var t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1); }
+
+  var ICON = {
+    chev: '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>',
+    gear: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.6 5.4 3.6 8.5s-1.2 5.9-3.6 8.5c-2.4-2.6-3.6-5.4-3.6-8.5s1.2-5.9 3.6-8.5z"/></svg>',
+    back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14l-4-4 4-4"/><path d="M5 10h9a5 5 0 0 1 0 10h-3"/></svg>',
+    city: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10l5-2.5V20M9 20V4l7 3.5V20M16 20v-8l4 2v6M3 20h18M12 9h1M12 12h1M12 15h1"/></svg>',
+    plane: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.9 0 1.5.9 1.5 2v4.5l6.5 3.8v1.9l-6.5-2v4.3l2 1.6V21L12 20l-3.5 1v-1.9l2-1.6v-4.3l-6.5 2v-1.9l6.5-3.8V5c0-1.1.6-2 1.5-2z"/></svg>',
+    flag: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>',
+    refresh: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg>',
+    pause: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>',
+    play: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg>',
+    trash: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/></svg>',
+    lens: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
+    clear: '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="var(--hint)"/><path d="M9 9l6 6M15 9l-6 6" fill="none" stroke="var(--section)" stroke-width="2" stroke-linecap="round"/></svg>',
+    check: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    minus: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>',
+    plus: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    left: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>',
+    right: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>'
+  };
+
+  // ================= визовые метки =================
+  var VISA = {};
+  try { VISA = JSON.parse(document.getElementById('visa-data').textContent.replace('/*VISA*/', '')); } catch (e) { VISA = {}; }
+  function visaOf(cc) { return cc ? (VISA[cc] || ['h', '']) : null; }
+
+  // ================= распаковка снимка =================
+  function b64bytes(s) {
+    s = s.replace(/-/g, '+').replace(/_/g, '/');
+    while (s.length % 4) s += '=';
+    var bin = atob(s), out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+  // Распаковка deflate (RFC 1951) для старых телефонов без DecompressionStream
+  function inflateRaw(src) {
+    var out = [], pos = 0, bit = 0;
+    function bits(n) {
+      var v = 0;
+      for (var i = 0; i < n; i++) {
+        if (pos >= src.length) throw new Error('eof');
+        v |= ((src[pos] >> bit) & 1) << i;
+        if (++bit === 8) { bit = 0; pos++; }
+      }
+      return v;
+    }
+    function table(lengths) {
+      var cnt = new Uint16Array(16), offs = new Uint16Array(16), sym = new Uint16Array(lengths.length);
+      for (var i = 0; i < lengths.length; i++) cnt[lengths[i]]++;
+      cnt[0] = 0;
+      for (i = 1; i < 16; i++) offs[i] = offs[i - 1] + cnt[i - 1];
+      for (i = 0; i < lengths.length; i++) if (lengths[i]) sym[offs[lengths[i]]++] = i;
+      return { cnt: cnt, sym: sym };
+    }
+    function decode(t) {
+      var code = 0, first = 0, index = 0;
+      for (var len = 1; len < 16; len++) {
+        code |= bits(1);
+        var c = t.cnt[len];
+        if (code - c < first) return t.sym[index + (code - first)];
+        index += c; first += c; first <<= 1; code <<= 1;
+      }
+      throw new Error('bad code');
+    }
+    var LB = [3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258];
+    var LE = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0];
+    var DB = [1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193, 257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577];
+    var DE = [0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13];
+    var fixedL, fixedD;
+    var last;
+    do {
+      last = bits(1);
+      var type = bits(2), lt, dt, i;
+      if (type === 0) {
+        if (bit) { bit = 0; pos++; }
+        var len = src[pos] | (src[pos + 1] << 8); pos += 4;
+        for (i = 0; i < len; i++) out.push(src[pos++]);
+        continue;
+      }
+      if (type === 1) {
+        if (!fixedL) {
+          var l = []; for (i = 0; i < 144; i++) l.push(8); for (; i < 256; i++) l.push(9); for (; i < 280; i++) l.push(7); for (; i < 288; i++) l.push(8);
+          fixedL = table(l); var dl = []; for (i = 0; i < 30; i++) dl.push(5); fixedD = table(dl);
+        }
+        lt = fixedL; dt = fixedD;
+      } else if (type === 2) {
+        var hlit = bits(5) + 257, hdist = bits(5) + 1, hclen = bits(4) + 4;
+        var ORD = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
+        var cl = new Array(19).fill(0);
+        for (i = 0; i < hclen; i++) cl[ORD[i]] = bits(3);
+        var ct = table(cl), lens = [];
+        while (lens.length < hlit + hdist) {
+          var sym = decode(ct);
+          if (sym < 16) lens.push(sym);
+          else if (sym === 16) { var prev = lens[lens.length - 1], r = 3 + bits(2); while (r--) lens.push(prev); }
+          else if (sym === 17) { r = 3 + bits(3); while (r--) lens.push(0); }
+          else { r = 11 + bits(7); while (r--) lens.push(0); }
+        }
+        lt = table(lens.slice(0, hlit)); dt = table(lens.slice(hlit));
+      } else throw new Error('bad block');
+      for (;;) {
+        var s = decode(lt);
+        if (s < 256) out.push(s);
+        else if (s === 256) break;
+        else {
+          s -= 257;
+          var length = LB[s] + bits(LE[s]);
+          var ds = decode(dt);
+          var dist = DB[ds] + bits(DE[ds]);
+          var start = out.length - dist;
+          for (i = 0; i < length; i++) out.push(out[start + i]);
+        }
+      }
+    } while (!last);
+    return new Uint8Array(out);
+  }
+  function unpack(text) {
+    var bytes = b64bytes(text);
+    if (typeof DecompressionStream === 'function') {
+      try {
+        var stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+        return new Response(stream).text().then(JSON.parse).catch(function () {
+          return JSON.parse(new TextDecoder().decode(inflateRaw(bytes)));
+        });
+      } catch (e) { /* старый движок — ниже */ }
+    }
+    return Promise.resolve(JSON.parse(new TextDecoder().decode(inflateRaw(bytes))));
+  }
+  // Снимок приходит параметром ?s=… (или ?d=… — карточка находки); на всякий случай смотрим и после «#»
+  function hashParams() {
+    var out = {};
+    (location.search.replace(/^\?/, '') + '&' + location.hash.replace(/^#/, '')).split(/[&?]/).forEach(function (pair) {
+      var i = pair.indexOf('=');
+      if (i > 0 && !(pair.slice(0, i) in out)) out[pair.slice(0, i)] = pair.slice(i + 1);
+    });
+    return out;
+  }
+
+  // ================= Telegram =================
+  var TG = null, NATIVE = false;
+  function version(v) { return TG && TG.isVersionAtLeast ? TG.isVersionAtLeast(v) : false; }
+  function loadTelegram() {
+    return new Promise(function (resolve) {
+      if (window.Telegram && window.Telegram.WebApp) return resolve(window.Telegram.WebApp);
+      var done = false;
+      function finish() { if (done) return; done = true; resolve(window.Telegram && window.Telegram.WebApp || null); }
+      var s = document.createElement('script');
+      s.src = 'https://telegram.org/js/telegram-web-app.js?59';
+      s.onload = finish; s.onerror = finish;
+      setTimeout(finish, 4000);
+      document.head.appendChild(s);
+    });
+  }
+  // Запасной мост, если telegram.org не загрузился: отправка данных и ссылки — напрямую в Telegram
+  function bridge() {
+    var hp = {}; location.hash.replace(/^#/, '').split(/[&?]/).forEach(function (p) { var i = p.indexOf('='); if (i > 0) { try { hp[p.slice(0, i)] = decodeURIComponent(p.slice(i + 1)); } catch (e) { /* пропускаем */ } } });
+    var theme = {}; try { theme = JSON.parse(hp.tgWebAppThemeParams || '{}'); } catch (e) { theme = {}; }
+    function post(type, data) {
+      var payload = JSON.stringify(data === undefined ? null : data);
+      try {
+        if (window.TelegramWebviewProxy) { window.TelegramWebviewProxy.postEvent(type, payload); return true; }
+        if (window.external && 'notify' in window.external) { window.external.notify(JSON.stringify({ eventType: type, eventData: data })); return true; }
+        if (window.parent !== window) { window.parent.postMessage(JSON.stringify({ eventType: type, eventData: data }), '*'); return true; }
+      } catch (e) { /* ниже */ }
+      return false;
+    }
+    var inside = !!(window.TelegramWebviewProxy || hp.tgWebAppData || hp.tgWebAppVersion || window.parent !== window);
+    return {
+      inside: inside, themeParams: theme, colorScheme: hp.tgWebAppColorScheme || '',
+      ready: function () { post('web_app_ready'); }, expand: function () { post('web_app_expand'); },
+      sendData: function (d) { if (!post('web_app_data_send', { data: d })) throw new Error('outside'); },
+      openLink: function (u) { if (!post('web_app_open_link', { url: u })) window.open(u, '_blank', 'noopener'); },
+      close: function () { post('web_app_close'); }
+    };
+  }
+
+  // ================= кнопки внизу и «Назад» =================
+  var buttons = { main: null, second: null, back: false };
+  var pb1 = document.getElementById('pb1'), pb2 = document.getElementById('pb2'), pageback = document.getElementById('pageback');
+  function onMain() { if (buttons.main && buttons.main.action) buttons.main.action(); }
+  function onSecond() { if (buttons.second && buttons.second.action) buttons.second.action(); }
+  pb1.addEventListener('click', onMain); pb2.addEventListener('click', onSecond);
+  pageback.addEventListener('click', function () { goBack(); });
+  function applyButtons(main, second, back) {
+    buttons.main = main; buttons.second = second; buttons.back = back;
+    if (NATIVE) {
+      var mb = TG.MainButton;
+      if (main) {
+        mb.setParams({ text: main.text, is_visible: true, is_active: true, color: css('--button'), text_color: css('--button-text') });
+      } else mb.hide();
+      if (TG.SecondaryButton && version('7.10')) {
+        var sb = TG.SecondaryButton;
+        if (second) sb.setParams({ text: second.text, is_visible: true, is_active: true, position: 'left', color: css('--section'), text_color: css('--accent') });
+        else sb.hide();
+      }
+      if (version('6.1')) { if (back) TG.BackButton.show(); else TG.BackButton.hide(); }
+    }
+    var page = !NATIVE;
+    var useSecondInPage = second && (page || !(TG && TG.SecondaryButton && version('7.10')));
+    document.body.classList.toggle('pagebar', !!(page && main) || !!useSecondInPage);
+    pb1.style.display = page && main ? '' : 'none';
+    pb1.textContent = main ? main.text : '';
+    pb2.style.display = useSecondInPage ? '' : 'none';
+    pb2.textContent = second ? second.text : '';
+    document.body.classList.toggle('pageback', page && back);
+  }
+  function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  function toast(text) {
+    var t = document.createElement('div');
+    t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = text;
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 3200);
+  }
+  function dialog(text, okText, cancelText) {
+    return new Promise(function (resolve) {
+      var box = document.getElementById('dialog'), btns = document.getElementById('dlg-btns');
+      document.getElementById('dlg-text').textContent = text;
+      btns.innerHTML = '';
+      function close(v) { box.classList.remove('open'); resolve(v); }
+      if (cancelText) { var c = document.createElement('button'); c.type = 'button'; c.textContent = cancelText; c.onclick = function () { close(false); }; btns.appendChild(c); }
+      var ok = document.createElement('button'); ok.type = 'button'; ok.textContent = okText || 'OK'; ok.onclick = function () { close(true); }; btns.appendChild(ok);
+      box.classList.add('open'); ok.focus();
+    });
+  }
+  function alertBox(text) {
+    if (NATIVE && version('6.2')) return new Promise(function (r) { TG.showAlert(text, function () { r(); }); });
+    return dialog(text, 'OK');
+  }
+  function confirmBox(text, okText) {
+    if (NATIVE && version('6.2')) return new Promise(function (r) { TG.showConfirm(text, function (ok) { r(!!ok); }); });
+    return dialog(text, okText || 'OK', 'Отмена');
+  }
+  function haptic(kind) {
+    try { if (NATIVE && version('6.1')) { if (kind === 'select') TG.HapticFeedback.selectionChanged(); else TG.HapticFeedback.impactOccurred(kind || 'light'); } } catch (e) { /* не важно */ }
+  }
+  function openLink(url) {
+    if (!/^https:\/\//.test(url)) return;
+    if (TG && TG.openLink) TG.openLink(url); else window.open(url, '_blank', 'noopener');
+  }
+
+  // ================= тема =================
+  function rgb(hex) {
+    var m = /^#?([0-9a-f]{6})$/i.exec(String(hex || '').trim());
+    if (!m) return null;
+    var n = parseInt(m[1], 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function hex(c) { return '#' + c.map(function (v) { return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0'); }).join(''); }
+  function lum(c) {
+    var a = c.map(function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+  }
+  function contrast(a, b) { var x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+  function mix(a, b, t) { return [0, 1, 2].map(function (i) { return a[i] + (b[i] - a[i]) * t; }); }
+  function readable(fg, bg, ratio) {
+    if (!fg || !bg) return fg;
+    var target = lum(bg) > 0.4 ? [0, 0, 0] : [255, 255, 255], c = fg;
+    for (var i = 0; i < 20 && contrast(c, bg) < ratio; i++) c = mix(c, target, 0.12);
+    return c;
+  }
+  function applyTheme() {
+    var tp = (TG && TG.themeParams) || {};
+    var root = document.documentElement;
+    var bgS = rgb(tp.secondary_bg_color), bg = rgb(tp.bg_color), sec = rgb(tp.section_bg_color) || bg;
+    var dark = (TG && TG.colorScheme === 'dark') || (sec ? lum(sec) < 0.3 : window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+    root.classList.toggle('dark', !!dark);
+    if (!sec) return;
+    var base = bgS || (dark ? [0, 0, 0] : [239, 239, 244]);
+    if (dark && bgS && sec && lum(bgS) > lum(sec)) { var tmp = sec; sec = bgS; base = tmp; }
+    var text = rgb(tp.text_color) || (dark ? [255, 255, 255] : [0, 0, 0]);
+    var hint = rgb(tp.subtitle_text_color) || rgb(tp.hint_color) || mix(text, sec, 0.45);
+    var accent = rgb(tp.accent_text_color) || rgb(tp.link_color) || rgb(tp.button_color);
+    var set = function (k, v) { if (v) root.style.setProperty(k, hex(v)); };
+    set('--bg', base); set('--section', sec); set('--text', text);
+    set('--muted', readable(hint, sec, 4.5));
+    set('--hint', mix(text, sec, 0.62));
+    set('--accent', readable(accent, sec, 4.5));
+    var btn = rgb(tp.button_color), btnText = rgb(tp.button_text_color) || [255, 255, 255];
+    if (btn) {
+      set('--button', btn); set('--button-text', btnText);
+      // Выбранные дни, месяцы и чипы: цвет кнопки, но с читаемым текстом (у Android-темы кнопка светлая)
+      var sel = btn, away = lum(btnText) > 0.5 ? [0, 0, 0] : [255, 255, 255];
+      for (var k = 0; k < 20 && contrast(btnText, sel) < 4.5; k++) sel = mix(sel, away, 0.08);
+      set('--sel', sel); set('--sel-text', btnText);
+    }
+    set('--danger', readable(rgb(tp.destructive_text_color) || (dark ? [255, 105, 97] : [217, 45, 32]), sec, 4.5));
+    set('--sep', rgb(tp.section_separator_color) || mix(text, sec, dark ? 0.78 : 0.84));
+    set('--fill', mix(text, sec, dark ? 0.86 : 0.9));
+    set('--switch-off', mix(text, sec, dark ? 0.8 : 0.88));
+    set('--seg', dark ? mix(text, sec, 0.66) : [255, 255, 255]);
+    if (accent) { set('--range', mix(accent, sec, dark ? 0.72 : 0.8)); set('--road', mix(accent, sec, dark ? 0.45 : 0.55)); }
+    if (NATIVE) {
+      try {
+        if (version('6.1')) { TG.setHeaderColor(hex(base)); TG.setBackgroundColor(hex(base)); }
+        if (version('7.10') && TG.setBottomBarColor) TG.setBottomBarColor(hex(base));
+      } catch (e) { /* старый клиент */ }
+    }
+  }
+
+  // ================= состояние =================
+  var S = {
+    snap: null, mode: 'full', deal: null,
+    stack: [], pending: {}, form: null,
+    chartDays: 30, openAirport: null, destQuery: '', destResults: null, destBusy: false, destError: '',
+    cityQuery: ''
+  };
+  var root = document.getElementById('app');
+
+  function top() { return S.stack[S.stack.length - 1]; }
+  function go(name, params) {
+    var cur = top();
+    if (cur) cur.scroll = window.scrollY;
+    S.stack.push(Object.assign({ name: name }, params || {}));
+    render(); window.scrollTo(0, 0);
+  }
+  function goBack() {
+    if (S.stack.length <= 1) return;
+    var cur = top();
+    if (cur.name === 'form' && S.form && S.form.dirty && !cur.confirmed) {
+      confirmBox('Выйти без сохранения? Изменения в форме пропадут.', 'Выйти').then(function (ok) {
+        if (ok) { cur.confirmed = true; S.form = null; goBack(); }
+      });
+      return;
+    }
+    if (cur.name === 'form') S.form = null;
+    S.stack.pop();
+    render();
+    var back = top();
+    window.scrollTo(0, back.scroll || 0);
+  }
+
+  // ---- настройки: снимок + несохранённые изменения ----
+  function setting(key) {
+    var p = S.pending, s = S.snap;
+    switch (key) {
+      case 'radius': return 'radius' in p ? p.radius : (s.h ? s.h.r : 300);
+      case 'pax': return p.pax || s.df.px;
+      case 'bag': return p.bag || s.df.bg;
+      case 'stops': return 'stops' in p ? p.stops : s.df.ms;
+      case 'maxp': return 'maxp' in p ? (p.maxp || null) : s.df.mp;
+      case 'thr': return p.thr || s.df.th;
+      case 'quiet': return 'quiet' in p ? (p.quiet.length ? p.quiet : null) : s.q;
+      case 'car': return p.car || s.car;
+      case 'visa': return p.visa || s.vm;
+    }
+    return null;
+  }
+  function airportOn(a) { return S.pending.airports && a[0] in S.pending.airports ? S.pending.airports[a[0]] : !!a[3]; }
+  function airportPref(a) { return S.pending.prefs && a[0] in S.pending.prefs ? S.pending.prefs[a[0]] : a[4]; }
+  function enabledCodes() { return (S.snap.a || []).filter(airportOn).map(function (a) { return a[0]; }); }
+  function hasPending() { return Object.keys(S.pending).length > 0; }
+  function touchPending() {
+    if (NATIVE && version('6.2')) { if (hasPending()) TG.enableClosingConfirmation(); else TG.disableClosingConfirmation(); }
+  }
+  function setPending(key, value) {
+    var s = S.snap, same;
+    switch (key) {
+      case 'radius': same = s.h && value === s.h.r; break;
+      case 'pax': same = value.join() === s.df.px.join(); break;
+      case 'bag': same = value === s.df.bg; break;
+      case 'stops': same = value === s.df.ms; break;
+      case 'maxp': same = (value || null) === (s.df.mp || null); break;
+      case 'thr': same = value === s.df.th; break;
+      case 'quiet': same = (value.length ? value.join() : '') === (s.q ? s.q.join() : ''); break;
+      case 'car': same = value.join() === s.car.join(); break;
+      case 'visa': same = value === s.vm; break;
+    }
+    if (same) delete S.pending[key]; else S.pending[key] = value;
+    touchPending();
+  }
+  function setAirport(code, on) {
+    var a = (S.snap.a || []).filter(function (x) { return x[0] === code; })[0];
+    if (!a) return;
+    S.pending.airports = S.pending.airports || {};
+    if (!!a[3] === on) delete S.pending.airports[code]; else S.pending.airports[code] = on;
+    if (!Object.keys(S.pending.airports).length) delete S.pending.airports;
+    touchPending();
+  }
+  function setPref(code, kind) {
+    var a = (S.snap.a || []).filter(function (x) { return x[0] === code; })[0];
+    if (!a) return;
+    S.pending.prefs = S.pending.prefs || {};
+    if ((a[4] || null) === (kind || null)) delete S.pending.prefs[code]; else S.pending.prefs[code] = kind || null;
+    if (!Object.keys(S.pending.prefs).length) delete S.pending.prefs;
+    touchPending();
+  }
+
+  // ---- отправка боту ----
+  function send(payload, why) {
+    if (S.mode !== 'full') {
+      alertBox('Изменять можно, когда приложение открыто кнопкой «Открыть приложение» внизу чата.');
+      return;
+    }
+    var body = Object.assign({ v: 1 }, payload);
+    if (hasPending() && !body.s) body.s = S.pending;
+    var data = JSON.stringify(body);
+    if (new Blob([data]).size > 4096) { alertBox('Слишком много изменений за раз — сохраните часть и повторите.'); return; }
+    haptic('medium');
+    try {
+      if (NATIVE) { TG.disableClosingConfirmation && version('6.2') && TG.disableClosingConfirmation(); TG.sendData(data); }
+      else if (TG && TG.inside) TG.sendData(data);
+      else { toast('Открыто не в Telegram — данные не отправлены' + (why ? ': ' + why : '')); console.log('sendData', data); }
+    } catch (e) {
+      alertBox('Не получилось отправить данные боту. Закройте приложение и откройте его кнопкой внизу чата.');
+    }
+  }
+
+  // ================= экраны =================
+  function trackings() { return S.snap.t || []; }
+  function trackingById(id) { return trackings().filter(function (t) { return t.i === id; })[0]; }
+  function tileFor(t) {
+    if (t.m === 'anywhere') return '<span class="tile" aria-hidden="true">' + ICON.globe + '</span>';
+    if (t.m === 'return') return '<span class="tile" aria-hidden="true">' + ICON.back + '</span>';
+    return '<span class="tile" aria-hidden="true">' + esc(t.cc || '··') + '</span>';
+  }
+  function badge(disc, strong) {
+    if (disc == null || disc <= 0) return '';
+    return '<span class="badge' + (strong ? '' : ' weak') + ' num">−' + disc + '%</span>';
+  }
+  function nowrap(text) { return '<span style="white-space:nowrap">' + text + '</span>'; }
+  function bestLine(t) {
+    var b = t.b;
+    if (!b) return t.lc ? 'подходящих билетов пока нет' : 'ещё не проверялось';
+    var when = nowrap(rangeText(pd(b.d1), b.d2 ? pd(b.d2) : null));
+    if (t.m === 'city') return 'лучшее из ' + esc(b.f) + ', ' + when;
+    if (t.m === 'return') return 'лучшее: прилёт в ' + esc(b.r ? b.r[5] || b.t : b.t) + ', ' + when;
+    return 'лучшее: ' + esc(b.tn || '') + ' из ' + esc(b.f) + ', ' + when;
+  }
+
+  function screenMain() {
+    var s = S.snap, h = s.h, n = enabledCodes().length;
+    var sub = h ? esc(h.n) + ': ' + count(n, 'аэропорт', 'аэропорта', 'аэропортов') + ' до ' + h.r + NB + 'км, ' + pax(s.df.px) : 'Город не выбран — откройте настройки';
+    var html = '<section class="hero-row" aria-label="Откуда летим"><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">' +
+      '<h1 class="h1">Отслеживания</h1><p class="lead">' + sub + '</p></div>' +
+      '<button type="button" class="icon-btn" data-act="go" data-to="settings" aria-label="Настройки">' + ICON.gear + '</button></section>';
+    var list = trackings();
+    html += '<section class="group" aria-labelledby="trk-h"><h2 class="cap" id="trk-h">' +
+      (list.length ? 'Проверяю каждые ' + count(Math.round(s.ci || 4), 'час', 'часа', 'часов') : 'Отслеживания') + '</h2>';
+    if (!list.length) {
+      html += '<div class="card empty"><b>Пока ничего не отслеживается</b><span class="muted">Нажмите «Новое отслеживание» внизу. Я буду проверять цены и напишу в чат, когда найду выгодный билет.</span></div>';
+    } else {
+      html += '<div class="card list icons">';
+      list.forEach(function (t) {
+        var right;
+        if (t.s === 'p') right = '<span class="muted" style="font-size:15px">на паузе</span>';
+        else if (t.s === 'f') right = '<span class="muted" style="font-size:15px">даты прошли</span>';
+        else if (t.bp) right = '<span class="right"><span class="price num">' + money(t.bp) + '</span>' + badge(t.bd, t.bd >= t.th) + '</span>';
+        else right = '';
+        var off = t.s !== 'a';
+        html += '<button type="button" class="row tall" data-act="go" data-to="tracking" data-id="' + t.i + '">' + tileFor(t) +
+          '<span class="grow"><span class="title b"' + (off ? ' style="color:var(--muted)"' : '') + '>' + esc(t.n) + '</span><span class="sub">' + bestLine(t) + '</span></span>' + right + '</button>';
+      });
+      html += '</div><p class="note">Цены вместе с дорогой до аэропорта, на ' + esc((s.at || '').slice(11, 16)) +
+        '. <button type="button" class="link" data-act="refresh">Обновить</button></p>';
+    }
+    html += '</section>';
+    var deals = s.d || [];
+    if (deals.length) {
+      html += '<section class="group" aria-labelledby="deal-h"><h2 class="cap" id="deal-h">Последние находки</h2><div class="card list">';
+      deals.forEach(function (d, i) {
+        var o = d.o, total = door(o);
+        var sub = (o.k === 'ow' ? 'в одну сторону, ' : '') + (o.m === 'return' ? 'в ' : 'из ') + esc(o.r && o.r[5] ? o.r[5] : o.f) + ', ' + foundDay(d.at);
+        html += '<button type="button" class="row tall" data-act="deal" data-src="d" data-idx="' + i + '"><span class="grow"><span class="title">' +
+          esc(o.tn || '') + ', ' + nowrap(rangeText(pd(o.d1), o.d2 ? pd(o.d2) : null)) + '</span><span class="sub">' + sub + '</span></span>' +
+          '<span class="price num">' + money(total) + '</span>' + badge(o.dc, true) + '</button>';
+      });
+      html += '</div></section>';
+    }
+    if (s.lv >= 2) html += '<p class="note">Часть подробностей не поместилась в кнопку — их можно открыть из сообщений в чате.</p>';
+    return { html: html, main: { text: 'Новое отслеживание', action: function () { openForm(null); } } };
+  }
+
+  function doorRows(rows, own) {
+    var max = 1;
+    rows.forEach(function (r) { max = Math.max(max, r[1] + r[2]); });
+    var names = Object.assign({}, doorNames);
+    (S.snap && S.snap.a || []).forEach(function (a) { names[a[0]] = a[1]; });
+    return rows.map(function (r) {
+      var wT = Math.max(2, r[1] / max * 100), wR = r[2] ? Math.max(1.5, r[2] / max * 100) : 0;
+      var best = r[0] === own;
+      var city = names[r[0]] && names[r[0]] !== r[0] ? names[r[0]] : '';
+      return '<div class="door' + (best ? ' best' : '') + '"><div class="lbl"><span class="code">' + esc(r[0]) + '</span><span class="city">' + esc(city) +
+        '</span><span class="sum num">' + money(r[1] + r[2]) + '</span></div><div class="bar" aria-hidden="true"><span class="t" style="width:' + wT.toFixed(1) + '%"></span>' +
+        (wR ? '<span class="r" style="width:' + wR.toFixed(1) + '%"></span>' : '') + '</div></div>';
+    }).join('');
+  }
+  var doorNames = {};
+  function doorSection(o, title, sub) {
+    doorNames = o.an || {};
+    var rows = o.dr ? o.dr.slice() : null;
+    if (!rows && o.alt) {
+      rows = [[o.r && o.r[5] || o.f, o.tot, o.r ? o.r[0] : 0]].concat(o.alt.map(function (x) { return [x[0], x[1], 0]; }));
+    }
+    if (!rows || rows.length < 2) return '';
+    var own = o.r && o.r[5] || (o.m === 'return' ? o.t : o.f);
+    var anyRoad = rows.some(function (r) { return r[2] > 0; });
+    return '<section class="card pad" aria-labelledby="door-h"><div style="display:flex;flex-direction:column;gap:2px"><h2 id="door-h" style="margin:0;font-size:17px;line-height:22px;font-weight:600">' + title +
+      '</h2><p style="margin:0;font-size:13px;line-height:18px" class="muted">' + sub + '</p></div>' + doorRows(rows, own) +
+      (anyRoad ? '<div class="legend"><span><i aria-hidden="true"></i>билеты</span><span><i class="r" aria-hidden="true"></i>дорога туда и обратно</span></div>' : '') + '</section>';
+  }
+
+  function chartSection(t) {
+    var h = t.h;
+    if (!h || !h.v || h.v.filter(function (v) { return v != null; }).length < 2) return '';
+    var total = h.v.length, opts = [7, 30, 90].filter(function (d, i) { return i === 0 || total > [7, 30, 90][i - 1]; });
+    var days = Math.min(S.chartDays, opts[opts.length - 1]);
+    if (opts.indexOf(days) < 0) days = opts[opts.length - 1];
+    var start = Math.max(0, total - days), vals = h.v.slice(start);
+    var pts = [];
+    vals.forEach(function (v, i) { if (v != null) pts.push([i, v * 100]); });
+    if (pts.length < 2) return '';
+    var usual = h.u ? h.u * 100 : null;
+    var lo = Math.min.apply(null, pts.map(function (p) { return p[1]; }).concat(usual ? [usual] : []));
+    var hi = Math.max.apply(null, pts.map(function (p) { return p[1]; }).concat(usual ? [usual] : []));
+    var span = Math.max(hi - lo, hi * 0.08), top = hi + span * 0.42, bot = lo - span * 0.16;
+    var W = 100, H = 140, n = Math.max(vals.length - 1, 1);
+    function x(i) { return i / n * W; }
+    function y(v) { return (top - v) / (top - bot) * H; }
+    var d = pts.map(function (p, k) { return (k ? 'L' : 'M') + x(p[0]).toFixed(2) + ' ' + y(p[1]).toFixed(2); }).join(' ');
+    var last = pts[pts.length - 1];
+    var grid = [0.2, 0.5, 0.8].map(function (f) { return 'M0 ' + (H * f).toFixed(1) + ' H' + W; }).join(' ');
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" role="img" aria-label="Цена от двери: сейчас ' + money(last[1]) + (usual ? ', обычно около ' + money(usual) : '') + '">' +
+      '<path d="' + grid + '" fill="none" stroke="var(--sep)" stroke-width="1" stroke-dasharray="2 4" vector-effect="non-scaling-stroke"/>' +
+      (usual ? '<path d="M0 ' + y(usual).toFixed(2) + ' H' + W + '" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="6 4" vector-effect="non-scaling-stroke"/>' : '') +
+      '<path d="' + d + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>';
+    var px = x(last[0]), py = y(last[1]) / H * 100;
+    var nowLbl = '<span class="lbl now num" style="right:' + (px > 70 ? (100 - px + 3).toFixed(1) + '%' : 'auto') + ';left:' + (px <= 70 ? (px + 3).toFixed(1) + '%' : 'auto') + ';top:calc(' + py.toFixed(1) + '% ' + (py > 60 ? '- 26px' : '+ 6px') + ')">сейчас ' + money(last[1]) + '</span>';
+    var usualLbl = usual ? '<span class="lbl num" style="right:0;top:calc(' + (y(usual) / H * 100).toFixed(1) + '% ' + (y(usual) / H > 0.2 ? '- 18px' : '+ 4px') + ')">обычно ≈ ' + money(usual) + '</span>' : '';
+    var first = addDays(pd(h.s), start), lastDay = addDays(pd(h.s), total - 1);
+    var mid = addDays(first, Math.round((lastDay - first) / 86400000 / 2));
+    var seg = '<div class="seg small" role="group" aria-label="Период" style="flex:none;width:' + (opts.length * 54) + 'px">' + opts.map(function (o) {
+      return '<button type="button" data-act="chart" data-days="' + o + '" aria-pressed="' + (o === days) + '">' + o + NB + 'дн</button>';
+    }).join('') + '</div>';
+    return '<section class="card pad" aria-labelledby="hist-h"><div style="display:flex;align-items:center;gap:12px"><h2 id="hist-h" style="margin:0;flex:1;min-width:0;font-size:17px;line-height:22px;font-weight:600">История цены</h2>' + seg + '</div>' +
+      '<div class="chart">' + svg + '<span class="pt" style="left:' + px.toFixed(2) + '%;top:' + py.toFixed(2) + '%"></span>' + nowLbl + usualLbl + '</div>' +
+      '<div class="scale num"><span>' + dayShort(first) + '</span><span>' + dayShort(mid) + '</span><span>' + dayShort(lastDay) + '</span></div></section>';
+  }
+
+  function conditions(t) {
+    var when = t.dm === 'next3' ? 'ближайшие 3 месяца' : windowText(t.df, t.dt);
+    var trip = KIND[t.tt] + (t.tt !== 'ow' && t.tn ? ', ' + t.tn + '–' + t.tx + NB + 'дней' : '');
+    var rows = [
+      ['Вылет', when], ['Поездка', trip],
+      ['Кто летит', pax(t.px) + ', ' + BAG[t.bg]],
+      ['Пересадки', STOPS[t.ms]],
+      ['Бюджет', t.mp ? 'до ' + money(t.mp) : 'без ограничения'],
+      ['Писать, если дешевле', 'на ' + t.th + '%']
+    ];
+    if (t.m === 'return') rows.unshift(['Откуда', esc(t.on || t.oc) + ' → домой']);
+    return '<section class="group" aria-labelledby="cond-h"><h2 class="cap" id="cond-h">Условия</h2><div class="card list">' + rows.map(function (r) {
+      return '<div class="row"><span style="flex:1">' + r[0] + '</span><span class="val">' + r[1] + '</span></div>';
+    }).join('') + '</div></section>';
+  }
+
+  function bestWhere(t, b) {
+    var mine = esc(b.r && b.r[5] || (t.m === 'return' ? b.t : b.f));
+    if (t.m === 'return') return 'Прилёт в ' + mine;
+    if (t.m === 'city') return 'Вылет из ' + mine;
+    return esc(b.tn || '') + ', вылет из ' + mine;
+  }
+  function screenTracking(p) {
+    var t = trackingById(p.id);
+    if (!t) return { html: '<div class="card empty"><b>Отслеживание не найдено</b><span class="muted">Возможно, его уже удалили. Обновите данные.</span></div>' };
+    var st = t.s === 'a' ? '<span class="dot"></span>Активно, ' + ago(t.lc) : t.s === 'p' ? '<span class="dot off"></span>На паузе' : '<span class="dot off"></span>Даты вылета прошли';
+    var html = '<section class="hero" aria-label="Отслеживание"><h1 class="h1">' + esc(t.n) + '</h1><p class="lead status">' + st + '</p></section>';
+    var b = t.b;
+    if (b && b.tot != null) {
+      var total = door(b), saving = b.u ? b.u - total : 0, n = nights(b);
+      html += '<section class="card" aria-labelledby="best-h"><div class="pad" style="gap:6px"><h2 id="best-h" class="muted" style="margin:0;font-size:13px;line-height:18px;font-weight:400">Лучший вариант сейчас</h2>' +
+        '<div style="display:flex;align-items:baseline;gap:8px"><span class="big num">' + money(total) + '</span>' + (b.r ? '<span class="lead">от двери</span>' : '') + '</div>' +
+        (b.dc > 0 ? '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="badge num" style="font-size:13px;line-height:18px">−' + b.dc + '% к обычной</span>' + (saving > 0 ? '<span class="num" style="font-size:15px;line-height:20px;font-weight:600;color:var(--deal)">выгода ≈ ' + money(saving) + '</span>' : '') + '</div>' : '') +
+        '<p style="margin:2px 0 0;font-size:15px;line-height:20px">' + bestWhere(t, b) + ', ' + rangeText(pd(b.d1), b.d2 ? pd(b.d2) : null) + (n != null ? ', ' + count(n, 'ночь', 'ночи', 'ночей') : '') + '</p></div>' +
+        '<button type="button" class="row act" style="background-image:linear-gradient(var(--sep),var(--sep));background-size:calc(100% - 16px) .5px;background-position:right top;background-repeat:no-repeat" data-act="deal" data-src="t" data-id="' + t.i + '"><span style="flex:1">Открыть билет</span>' + ICON.chev + '</button></section>';
+      html += doorSection(b, 'Цена от двери по аэропортам', 'Та же поездка из каждого вашего аэропорта, за всех');
+    } else if (b) {
+      html += '<div class="card empty"><b>Лучшее сейчас: ' + money(t.bp) + '</b><span class="muted">Подробности — в последнем сообщении бота в чате.</span></div>';
+    } else if (t.s === 'a') {
+      html += '<div class="card empty"><b>' + (t.lc ? 'Подходящих билетов пока нет' : 'Скоро проверю') + '</b><span class="muted">' +
+        (t.lc ? 'В данных Aviasales нет билетов под эти условия. Попробуйте другие даты или больше пересадок.' : 'Первая проверка идёт в течение нескольких минут — итог придёт в чат.') + '</span></div>';
+    }
+    html += chartSection(t);
+    html += conditions(t);
+    html += '<section class="card list" aria-label="Действия">' +
+      '<button type="button" class="row act" data-act="check" data-id="' + t.i + '"' + (t.s === 'f' ? ' disabled' : '') + '>' + ICON.refresh + 'Проверить сейчас</button>' +
+      (t.s === 'p' ? '<button type="button" class="row act" data-act="resume" data-id="' + t.i + '">' + ICON.play + 'Возобновить</button>'
+        : t.s === 'a' ? '<button type="button" class="row act" data-act="pause" data-id="' + t.i + '">' + ICON.pause + 'Поставить на паузу</button>' : '') +
+      '<button type="button" class="row danger" data-act="delete" data-id="' + t.i + '">' + ICON.trash + 'Удалить отслеживание</button></section>' +
+      '<p class="note">Действия закрывают приложение — ответ придёт в чат.</p>';
+    var main = t.m === 'return' ? null : { text: 'Изменить условия', action: function () { openForm(t); } };
+    return { html: html, main: main };
+  }
+
+  function dealContext(p) {
+    if (p.src === 'x') return S.deal;
+    if (p.src === 't') { var t = trackingById(p.id); return t && t.b ? { o: t.b, ti: t.n, tid: t.i, best: true } : null; }
+    var d = (S.snap.d || [])[p.idx];
+    return d ? { o: d.o, ti: d.ti, tid: d.tid, id: d.id } : null;
+  }
+  function legRow(l) {
+    return '<div class="legs"><div style="display:flex;flex-direction:column"><span class="t num">' + esc(l[0]) + '</span><span class="c">' + esc(l[5]) + '</span></div>' +
+      '<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><span class="c num" style="font-size:12px;line-height:16px">' + (l[3] ? duration(l[3]) : '') +
+      '</span><div class="line" aria-hidden="true"><b></b><i></i>' + (l[4] ? '<u></u><i></i>' : '') + '<b></b></div><span class="c" style="font-size:12px;line-height:16px">' +
+      (l[4] ? count(l[4], 'пересадка', 'пересадки', 'пересадок') : 'прямой') + '</span></div>' +
+      '<div style="display:flex;flex-direction:column;align-items:flex-end"><span class="t num">' + (l[1] ? esc(l[1]) + (l[2] ? '<span class="c" style="font-weight:600"> +' + l[2] + '</span>' : '') : '—') + '</span><span class="c">' + esc(l[6]) + '</span></div></div>';
+  }
+  function screenDeal(p) {
+    var ctx = dealContext(p);
+    if (!ctx || !ctx.o || !ctx.o.l) return { html: '<div class="card empty"><b>Подробностей нет</b><span class="muted">Откройте эту находку из сообщения бота в чате.</span></div>' };
+    var o = ctx.o, total = door(o), n = nights(o), back = o.m === 'return';
+    var head = back ? esc(o.fn || o.f) + ' → домой' : esc(o.fn || o.f) + ' → ' + esc(o.tn || o.t);
+    var html = '<section class="hero" aria-label="Поездка">' + (ctx.ti ? '<p class="muted" style="margin:0;font-size:13px;line-height:18px">' + (ctx.best ? 'Лучшее по отслеживанию' : 'Находка по отслеживанию') + ' «' + esc(ctx.ti) + '»</p>' : '') +
+      '<h1 class="h1" style="font-size:26px;line-height:32px">' + head + '</h1><p class="lead">' + rangeText(pd(o.d1), o.d2 ? pd(o.d2) : null) +
+      (n != null ? ', ' + count(n, 'ночь', 'ночи', 'ночей') : '') + ', ' + KIND[o.k] + ', ' + pax(o.px || [1, 0, 0]) + '</p></section>';
+    var saving = o.u ? o.u - total : 0, ax = o.ax ? '≈' + NB : '';
+    var rows = '<dt>Билеты' + ((o.px && (o.px[0] + o.px[1] > 1)) ? ', ' + (o.px[0] + o.px[1]) + ' × ' + money(o.pp) : '') + '</dt><dd class="num">' + ax + money(o.tot) + '</dd>';
+    if (o.r) {
+      var where = o.r[6] === 'from' ? ' из ' + esc(o.r[5]) + ' домой' : ' до ' + esc(o.r[5]) + (o.r[4] === 2 ? ' и обратно' : '');
+      var name = o.r[2] ? o.r[2].charAt(0).toUpperCase() + o.r[2].slice(1) : 'Дорога';
+      rows += '<dt>' + esc(name) + where + '</dt><dd class="num">' + (o.r[3] ? '≈' + NB : '') + money(o.r[0]) + '</dd>';
+    }
+    if (o.u) rows += '<dt class="muted">Обычно' + (o.r ? ' с дорогой' : '') + (o.uf && o.uf !== (o.r && o.r[5] || o.f) ? ', дешевле всего ' + (back ? 'в ' : 'из ') + esc(o.uf) : '') + '</dt><dd class="num muted">≈ ' + money(o.u) + '</dd>';
+    html += '<section class="card pad" aria-label="Цена"><div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:baseline;gap:8px"><span class="big num">' + ax + money(total) + '</span>' +
+      (o.r ? '<span class="lead">от двери</span>' : '') + '</div>' + (o.dc > 0 ? '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="badge num" style="font-size:13px;line-height:18px">−' + o.dc + '% к обычной цене</span>' +
+      (saving > 0 ? '<span class="num" style="font-size:15px;line-height:20px;font-weight:600;color:var(--deal)">выгода ≈ ' + money(saving) + '</span>' : '') + '</div>' : '') +
+      '</div><div class="hr"></div><dl class="kv">' + rows + '</dl></section>';
+    html += '<section class="card pad" aria-labelledby="legs-h" style="gap:16px"><h2 id="legs-h" style="margin:0;font-size:17px;line-height:22px;font-weight:600">Рейсы</h2>' +
+      '<div style="display:flex;flex-direction:column;gap:8px"><p style="margin:0;font-size:15px;line-height:20px"><b>Туда</b> <span class="muted">' + dayLong(pd(o.d1)) + (o.al ? ', ' + esc(o.al) : '') + '</span></p>' + legRow(o.l[0]) + '</div>' +
+      (o.l[1] ? '<div class="hr"></div><div style="display:flex;flex-direction:column;gap:8px"><p style="margin:0;font-size:15px;line-height:20px"><b>Обратно</b> <span class="muted">' + dayLong(pd(o.d2)) + '</span></p>' + legRow(o.l[1]) + '</div>' : '') +
+      '<p class="muted" style="margin:0;font-size:13px;line-height:18px">Время местное. Пересадки и багаж уточните на сайте перед покупкой.</p></section>';
+    var own = o.r && o.r[5] || o.f;
+    html += doorSection(o, back ? 'Почему в ' + esc(own) : 'Почему из ' + esc(own), back ? 'Прилёт в каждый ваш аэропорт сейчас, с дорогой домой' : 'Тот же месяц из каждого вашего аэропорта, с дорогой');
+    var extra = '';
+    if (o.sp) {
+      var diff = o.tot - o.sp[0];
+      extra += '<div class="row tall"><span class="grow"><span class="title">Два билета в одну сторону</span><span class="sub">' +
+        (diff > 0 ? 'дешевле на ' + money(diff) + (o.sp[1] && o.sp[1] !== o.f ? ', обратно в ' + esc(o.sp[1]) : '') : 'туда-обратно дешевле на ' + money(-diff)) +
+        '</span></span><span class="num' + (diff > 0 ? '' : ' muted') + '">' + money(o.sp[0]) + '</span></div>';
+    }
+    if (o.vz) {
+      var lvl = o.vz[0] === 'free' ? 'f' : o.vz[0] === 'easy' ? 'e' : 'h';
+      extra += '<div class="row tall"><span class="grow"><span class="title">Виза</span><span class="sub">' + esc((o.cn ? o.cn + ': ' : '') + o.vz[1]) + '</span></span>' +
+        '<span class="status" style="font-size:15px;font-weight:600;color:' + (lvl === 'f' ? 'var(--deal)' : 'var(--muted)') + '"><span class="dot' + VISA_DOT[lvl] + '"></span>' + VISA_TEXT[lvl] + '</span></div>';
+    }
+    extra += '<div class="row tall"><span class="grow"><span class="title">Багаж</span><span class="sub">' + (o.bg === 'bag' ? 'добавил примерную доплату ' + money(o.bf || 3000) + ' за человека в одну сторону' : 'в данных Aviasales его нет') +
+      '</span></span><span class="muted" style="font-size:15px">уточните</span></div>';
+    if (o.px && (o.px[1] || o.px[2])) extra += '<div class="row tall"><span class="grow"><span class="title">Дети</span><span class="sub">детские билеты посчитаны примерно — точную цену покажет Aviasales</span></span></div>';
+    html += '<section class="card list" aria-label="Важно знать">' + extra + '</section>';
+    if (o.k === 'ow' && !back && ctx.id && S.mode === 'full') {
+      html += '<section class="group" aria-labelledby="ret-h"><h2 class="cap" id="ret-h">Следить за обратным билетом</h2><div class="card pad"><div class="chips">' +
+        [['1-2', 'через 1–2 недели'], ['2-4', 'через 2–4 недели'], ['4-8', 'через 1–2 месяца']].map(function (w) {
+          return '<button type="button" class="chip" data-act="return" data-w="' + w[0] + '" data-deal="' + ctx.id + '">' + w[1] + '</button>';
+        }).join('') + '</div><p class="muted" style="margin:0;font-size:13px;line-height:18px">Напишу, когда обратный билет станет дешевле обычного.</p></div></section>';
+    }
+    html += '<p class="note">Цена из кэша Aviasales' + (S.snap && S.snap.at && p.src !== 'x' ? ', данные на ' + esc(S.snap.at.slice(11, 16)) : '') + ' — перед покупкой проверьте на сайте.' +
+      (o.r && o.r[1] === 'public' ? ' Расписание: <a href="https://rasp.yandex.ru/" data-act="link" data-url="https://rasp.yandex.ru/">Яндекс Расписания</a>.' : '') + '</p>';
+    if (S.mode === 'deal') html += '<p class="note">Изменить отслеживание и настройки — кнопкой «✈️ Открыть приложение» внизу чата.</p>';
+    return { html: html, main: { text: 'Купить на Aviasales', action: function () { openLink(o.url); } } };
+  }
+
+  // ---- форма отслеживания ----
+  function openForm(t) {
+    var s = S.snap, nextMonth = new Date(); nextMonth = new Date(nextMonth.getFullYear(), nextMonth.getMonth() + 1, 1);
+    var firstDay = tomorrow();
+    var f = {
+      id: null, dirty: false, mode: 'city', code: null, name: null, cc: null,
+      dmode: 'month', month: isoDay(nextMonth).slice(0, 7), from: null, to: null, calMonth: isoDay(firstDay).slice(0, 7), picking: false,
+      trip: 'rt', min: 6, max: 14,
+      px: setting('pax').slice(), bag: setting('bag'), stops: setting('stops'), maxp: setting('maxp'), thr: setting('thr')
+    };
+    if (t) {
+      f.id = t.i; f.mode = t.m; f.code = t.dc || null; f.cc = t.cc || null; f.name = t.m === 'country' ? (t.cn || t.dn) : t.dn;
+      f.trip = t.tt; f.min = t.tn || 6; f.max = t.tx || 14;
+      f.px = t.px.slice(); f.bag = t.bg; f.stops = t.ms; f.maxp = t.mp || null; f.thr = t.th;
+      if (t.dm === 'next3') f.dmode = 'next3';
+      else if (t.dm === 'month') { f.dmode = 'month'; f.month = t.df.slice(0, 7); f.calMonth = f.month; }
+      else { f.dmode = 'dates'; f.from = t.df; f.to = t.dt; f.calMonth = t.df.slice(0, 7); }
+    }
+    S.form = f;
+    go('form');
+  }
+  function formPayload(f) {
+    var t = {
+      mode: f.mode, dest_code: f.mode === 'city' ? f.code : null, dest_name: f.mode === 'anywhere' ? null : f.name,
+      dest_country: f.mode === 'country' ? f.cc : (f.mode === 'city' ? f.cc : null),
+      trip_type: f.trip, trip_min: f.min, trip_max: f.max,
+      adults: f.px[0], children: f.px[1], infants: f.px[2], baggage: f.bag, max_stops: f.stops,
+      max_price: f.maxp || 0, threshold_pct: f.thr
+    };
+    if (f.dmode === 'next3') { t.date_mode = 'next3'; t.date_from = null; t.date_to = null; }
+    else if (f.dmode === 'month') { var m = pd(f.month + '-01'); t.date_mode = 'month'; t.date_from = isoDay(m); t.date_to = isoDay(monthEnd(m)); }
+    else { t.date_mode = f.from === f.to ? 'exact' : 'range'; t.date_from = f.from; t.date_to = f.to; }
+    return t;
+  }
+  function formProblem(f) {
+    if (f.mode === 'city' && !f.code) return 'Выберите город, куда летим.';
+    if (f.mode === 'country' && !f.cc) return 'Выберите страну.';
+    if (f.dmode === 'dates' && (!f.from || !f.to)) return 'Выберите даты вылета в календаре.';
+    if (!enabledCodes().length) return 'Не выбран ни один аэропорт вылета — включите их в разделе «Откуда».';
+    return null;
+  }
+  function submitForm(op) {
+    var f = S.form, problem = formProblem(f);
+    if (problem) { alertBox(problem); return; }
+    var payload = { op: op, t: formPayload(f) };
+    if (op === 'track.save' && f.id) payload.id = f.id;
+    send(payload);
+  }
+  function segBtns(act, items, current) {
+    return items.map(function (it) {
+      return '<button type="button" data-act="' + act + '" data-v="' + it[0] + '" aria-pressed="' + (String(it[0]) === String(current)) + '">' + it[1] + '</button>';
+    }).join('');
+  }
+  function destRow(f) {
+    if (f.mode === 'anywhere') {
+      var vm = setting('visa');
+      return '<div class="row tall"><span class="grow"><span class="title b">Туда, где выгоднее всего</span><span class="sub">За границу; страны — ' +
+        ({ free: 'только без визы', easy: 'без визы и с простой визой', all: 'все' }[vm] || '') + ' (в настройках)</span></span></div>';
+    }
+    var v = visaOf(f.cc), label = f.name ? esc(f.name) + (f.mode === 'country' ? ', все города' : '') : (f.mode === 'country' ? 'Выбрать страну' : 'Выбрать город');
+    var sub = f.name && v ? '<span class="sub status"><span class="dot' + VISA_DOT[v[0]] + '"></span>' + esc(v[1] || VISA_TEXT[v[0]]) + '</span>' : (f.name ? '' : '<span class="sub">Поиск по названию или коду</span>');
+    return '<button type="button" class="row tall" data-act="go" data-to="dest"><span class="grow"><span class="title' + (f.name ? ' b' : '') + '" style="' + (f.name ? '' : 'color:var(--accent)') + '">' + label + '</span>' + sub +
+      '</span>' + (f.name ? '<span class="muted" style="font-size:15px">Изменить</span>' : '') + ICON.chev + '</button>';
+  }
+  function calendar(f) {
+    var m = pd(f.calMonth + '-01'), first = (m.getDay() + 6) % 7, days = monthEnd(m).getDate();
+    var min = tomorrow(), now = new Date(), minMonth = new Date(now.getFullYear(), now.getMonth(), 1), maxMonth = new Date(now.getFullYear(), now.getMonth() + 11, 1);
+    var cells = '';
+    for (var i = 0; i < first; i++) cells += '<span></span>';
+    var a = f.from ? pd(f.from) : null, z = f.to ? pd(f.to) : null;
+    for (var d = 1; d <= days; d++) {
+      var day = new Date(m.getFullYear(), m.getMonth(), d), cls = [], wk = (first + d - 1) % 7;
+      if (a && z && day > a && day < z) { cls.push('in'); if (wk === 0 || d === 1) cls.push('wk0'); if (wk === 6 || d === days) cls.push('wk6'); }
+      if (a && day.getTime() === a.getTime()) cls.push('a');
+      if (z && day.getTime() === z.getTime()) cls.push('z');
+      var sel = cls.indexOf('a') >= 0 || cls.indexOf('z') >= 0;
+      cells += '<button type="button" class="' + cls.join(' ') + '" data-act="day" data-d="' + isoDay(day) + '"' + (day < min ? ' disabled' : '') + (sel ? ' aria-pressed="true"' : '') + ' aria-label="' + dayLong(day) + '">' + d + '</button>';
+    }
+    var prev = new Date(m.getFullYear(), m.getMonth() - 1, 1), next = new Date(m.getFullYear(), m.getMonth() + 1, 1);
+    var hint = !f.from ? 'Нажмите первый день, когда можно вылететь.' : f.picking ? 'Теперь последний день (или тот же — для точной даты).' :
+      (f.from === f.to ? 'Вылет ' + dayShort(pd(f.from)) + '.' : 'Вылет в любой день: ' + rangeText(pd(f.from), pd(f.to)) + '.');
+    return '<div style="display:flex;flex-direction:column;gap:8px"><div class="cal-head"><button type="button" data-act="cal" data-m="' + isoDay(prev).slice(0, 7) + '" aria-label="Предыдущий месяц"' + (prev < minMonth ? ' disabled' : '') + '>' + ICON.left + '</button>' +
+      '<span style="font-size:17px;font-weight:600">' + MONTHS[m.getMonth()].charAt(0).toUpperCase() + MONTHS[m.getMonth()].slice(1) + ' ' + m.getFullYear() + '</span><button type="button" data-act="cal" data-m="' + isoDay(next).slice(0, 7) + '" aria-label="Следующий месяц"' + (next > maxMonth ? ' disabled' : '') + '>' + ICON.right + '</button></div>' +
+      '<div class="cal-wd num" aria-hidden="true">' + WEEKDAYS.map(function (w) { return '<span>' + w + '</span>'; }).join('') + '</div><div class="cal num" role="group" aria-label="Даты вылета">' + cells + '</div>' +
+      '<p class="muted" style="margin:0;font-size:13px;line-height:18px">' + hint + '</p></div>';
+  }
+  function monthsGrid(f) {
+    var now = new Date(), out = '';
+    for (var i = 0; i < 12; i++) {
+      var m = new Date(now.getFullYear(), now.getMonth() + i, 1), key = isoDay(m).slice(0, 7);
+      var label = MONTHS[m.getMonth()].charAt(0).toUpperCase() + MONTHS[m.getMonth()].slice(1);
+      out += '<button type="button" data-act="month" data-v="' + key + '" aria-pressed="' + (key === f.month) + '" aria-label="' + label + ' ' + m.getFullYear() + '">' + label + '</button>';
+    }
+    return '<div class="months" role="group" aria-label="Месяц вылета">' + out + '</div>';
+  }
+  function stepper(key, label, sub, value, canMinus, canPlus) {
+    return '<div class="row" style="min-height:56px;padding:6px 8px 6px 16px"><span class="grow"><span class="title">' + label + '</span>' + (sub ? '<span class="sub">' + sub + '</span>' : '') + '</span>' +
+      '<span class="stepper"><button type="button" data-act="pax" data-k="' + key + '" data-d="-1" aria-label="' + label + ': меньше"' + (canMinus ? '' : ' disabled') + '>' + ICON.minus + '</button>' +
+      '<output class="num" aria-live="polite">' + value + '</output><button type="button" data-act="pax" data-k="' + key + '" data-d="1" aria-label="' + label + ': больше"' + (canPlus ? '' : ' disabled') + '>' + ICON.plus + '</button></span></div>';
+  }
+  function paxOk(p) { return p[0] >= 1 && p[1] >= 0 && p[2] >= 0 && p[2] <= p[0] && p[0] + p[1] + p[2] <= 9 && p[1] <= 8; }
+  function paxBlock(p) {
+    function can(i, d) { var q = p.slice(); q[i] += d; return paxOk(q); }
+    return stepper(0, 'Взрослые', '', p[0], can(0, -1), can(0, 1)) + stepper(1, 'Дети', 'от 2 до 11 лет', p[1], can(1, -1), can(1, 1)) + stepper(2, 'Младенцы', 'до 2 лет, на руках', p[2], can(2, -1), can(2, 1));
+  }
+  function dualSlider(f) {
+    var left = (f.min - 1) / 29 * 100, right = (f.max - 1) / 29 * 100;
+    return '<div style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;align-items:baseline;justify-content:space-between"><span>Сколько дней</span><span class="num" id="days-val" style="font-weight:600">' + f.min + '–' + f.max + '</span></div>' +
+      '<div class="slider" id="days"><span class="track"></span><span class="fill" id="days-fill" style="left:calc(14px + (100% - 28px) * ' + (left / 100).toFixed(4) + ');right:calc(14px + (100% - 28px) * ' + (1 - right / 100).toFixed(4) + ')"></span>' +
+      '<input type="range" min="1" max="30" step="1" value="' + f.min + '" data-in="dmin" aria-label="Поездка не короче, дней"><input type="range" min="1" max="30" step="1" value="' + f.max + '" data-in="dmax" aria-label="Поездка не длиннее, дней"></div>' +
+      '<div class="scale num"><span>1 день</span><span>30 дней</span></div></div>';
+  }
+  function screenForm() {
+    var f = S.form;
+    if (!f) { S.stack.pop(); return screenMain(); }
+    var html = '<h1 class="h1" style="margin:0 4px">' + (f.id ? 'Изменение отслеживания' : 'Новое отслеживание') + '</h1>';
+    html += '<section class="group" aria-labelledby="f-where"><h2 class="cap" id="f-where">Куда</h2><div class="card"><div style="padding:12px 16px"><div class="seg" role="group" aria-label="Куда летим">' +
+      segBtns('fmode', [['city', 'Город'], ['country', 'Страна'], ['anywhere', 'Куда угодно']], f.mode) + '</div></div><div class="hr" style="margin-left:16px"></div>' + destRow(f) + '</div></section>';
+    var dates = f.dmode === 'dates' ? calendar(f) : f.dmode === 'month' ? monthsGrid(f) :
+      '<p style="margin:0;font-size:15px;line-height:20px">Ближайшие 3 месяца, считая с завтрашнего дня. Окно сдвигается само — отслеживание не устаревает.</p>';
+    html += '<section class="group" aria-labelledby="f-when"><h2 class="cap" id="f-when">Когда вылет</h2><div class="card pad" style="gap:14px;padding-bottom:16px"><div class="seg" role="group" aria-label="Как выбрать даты">' +
+      segBtns('dmode', [['dates', 'Даты'], ['month', 'Месяц'], ['next3', '3 месяца']], f.dmode) + '</div>' + dates + '</div></section>';
+    html += '<section class="group" aria-labelledby="f-trip"><h2 class="cap" id="f-trip">Поездка</h2><div class="card pad" style="gap:16px;padding-bottom:16px"><div class="seg" role="group" aria-label="Тип билета">' +
+      segBtns('trip', [['rt', 'Туда-обратно'], ['ow', 'Только туда'], ['both', 'Сравнить']], f.trip) + '</div>' + (f.trip !== 'ow' ? dualSlider(f) : '') +
+      (f.trip === 'both' ? '<p class="muted" style="margin:0;font-size:13px;line-height:18px">Сравню билет туда-обратно с двумя билетами в одну сторону и покажу, что дешевле.</p>' : '') + '</div></section>';
+    html += '<section class="group" aria-labelledby="f-who"><h2 class="cap" id="f-who">Кто летит</h2><div class="card list">' + paxBlock(f.px) +
+      '<div style="padding:12px 16px 14px;display:flex;flex-direction:column;gap:8px"><span class="muted" style="font-size:15px">Багаж</span><div class="seg" role="group" aria-label="Багаж">' +
+      segBtns('fbag', [['hand', 'Ручная кладь'], ['bag', 'С багажом'], ['any', 'Не важно']], f.bag) + '</div></div></div></section>';
+    html += '<section class="group" aria-labelledby="f-rules"><h2 class="cap" id="f-rules">Условия</h2><div class="card list">' +
+      '<div style="padding:12px 16px 14px;display:flex;flex-direction:column;gap:8px"><span class="muted" style="font-size:15px">Пересадки</span><div class="seg" role="group" aria-label="Пересадки">' +
+      segBtns('fstops', [[0, 'Прямые'], [1, 'До одной'], [2, 'До двух']], f.stops) + '</div></div>' +
+      '<div class="field"><label for="f-budget">Билеты не дороже</label><input id="f-budget" type="text" inputmode="numeric" autocomplete="off" data-in="budget" placeholder="без лимита" value="' + (f.maxp ? String(f.maxp).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '') + '"><span class="unit">₽</span></div>' +
+      '<div style="padding:12px 16px 14px;display:flex;flex-direction:column;gap:10px"><span class="muted" style="font-size:15px">Писать, если дешевле обычного хотя бы на</span><div class="chips five" role="group" aria-label="Порог выгоды">' +
+      THRESHOLDS.map(function (v) { return '<button type="button" class="chip" data-act="fthr" data-v="' + v + '" aria-pressed="' + (v === f.thr) + '">' + v + '%</button>'; }).join('') +
+      '</div><p class="muted" style="margin:0;font-size:13px;line-height:18px">Сравниваю со всеми вашими аэропортами вместе с дорогой до них.</p></div></div></section>';
+    var codes = enabledCodes();
+    html += '<section class="group" aria-labelledby="f-from"><h2 class="cap" id="f-from">Откуда</h2><div class="card"><button type="button" class="row" data-act="go" data-to="airports" data-from="form"><span style="flex:1">Аэропорты</span><span class="val">' +
+      (codes.length ? esc(codes.join(', ')) : 'не выбраны') + '</span>' + ICON.chev + '</button></div><p class="note">Приложение закроется, а итог придёт сообщением в чат.</p></section>';
+    var main = { text: f.id ? 'Сохранить' : 'Следить за ценой', action: function () { submitForm('track.save'); } };
+    var second = f.id ? null : { text: 'Найти сейчас', action: function () { submitForm('search'); } };
+    return { html: html, main: main, second: second };
+  }
+
+  // ---- куда: поиск города или страны ----
+  var acSeq = 0, acTimer = null;
+  function autocomplete(q) {
+    clearTimeout(acTimer);
+    var query = q.trim();
+    if (query.length < 2) { S.destResults = null; S.destBusy = false; S.destError = ''; renderDestResults(); return; }
+    acTimer = setTimeout(function () {
+      var id = ++acSeq, name = '__ac' + id, done = false;
+      S.destBusy = true; renderDestResults();
+      var s = document.createElement('script');
+      function finish(data, error) {
+        if (done) return; done = true;
+        try { delete window[name]; } catch (e) { window[name] = undefined; }
+        s.remove();
+        if (id !== acSeq) return;
+        S.destBusy = false; S.destError = error || ''; S.destResults = data || [];
+        renderDestResults();
+      }
+      window[name] = function (data) { finish(Array.isArray(data) ? data : []); };
+      s.onerror = function () { finish(null, 'net'); };
+      setTimeout(function () { finish(null, 'net'); }, 7000);
+      s.src = 'https://autocomplete.travelpayouts.com/places2?locale=ru&types%5B%5D=city&types%5B%5D=airport&types%5B%5D=country&term=' + encodeURIComponent(query) + '&callback=' + name;
+      document.head.appendChild(s);
+    }, 350);
+  }
+  function destItems() {
+    var q = S.destQuery.trim(), out = [];
+    if (q.length < 2) {
+      var seen = {};
+      (S.snap.t || []).concat([]).forEach(function (t) {
+        if (t.m === 'city' && t.dc && !seen[t.dc]) { seen[t.dc] = 1; out.push({ type: 'city', code: t.dc, name: t.dn, cc: t.cc, sub: '' }); }
+      });
+      (S.snap.d || []).forEach(function (d) {
+        var o = d.o;
+        if (o.tc && !seen[o.tc] && o.m !== 'return') { seen[o.tc] = 1; out.push({ type: 'city', code: o.tc, name: o.tn, cc: o.cc, sub: o.cn || '' }); }
+      });
+      out = out.slice(0, 5);
+      POPULAR.forEach(function (c) { out.push({ type: 'country', code: c[0], name: c[1], cc: c[0], sub: 'все города страны', popular: true }); });
+      return out;
+    }
+    (S.destResults || []).forEach(function (r) {
+      if (!r || !r.code || !r.name) return;
+      if (r.type === 'city') out.push({ type: 'city', code: r.code, name: r.name, cc: r.country_code, sub: r.country_name || '' });
+      else if (r.type === 'airport') out.push({ type: 'airport', code: r.city_code || r.code, name: r.name, cc: r.country_code, sub: 'аэропорт ' + (r.city_name ? 'города ' + r.city_name : '') + ', ' + r.code, city: r.city_name });
+      else if (r.type === 'country') out.push({ type: 'country', code: r.code, name: r.name, cc: r.code, sub: 'все города страны' });
+    });
+    if (!out.length && /^[a-z]{3}$/i.test(q)) out.push({ type: 'city', code: q.toUpperCase(), name: q.toUpperCase(), cc: null, sub: 'город с кодом ' + q.toUpperCase() });
+    return out.slice(0, 8);
+  }
+  function destResultsHtml() {
+    var q = S.destQuery.trim(), items = destItems();
+    var head = q.length < 2 ? (items.length ? 'Недавние и популярные' : '') : (S.destBusy ? 'Ищу…' : 'Найдено');
+    var html = head ? '<h2 class="cap">' + head + '</h2>' : '';
+    if (q.length >= 2 && !S.destBusy && !items.length) {
+      return html + '<div class="card empty"><b>' + (S.destError ? 'Поиск сейчас недоступен' : 'Ничего не нашлось') + '</b><span class="muted">' +
+        (S.destError ? 'Проверьте интернет или VPN. Можно ввести код города латиницей, например SHA.' : 'Проверьте название или введите код города, например SHA.') + '</span></div>';
+    }
+    html += '<div class="card list inset68">' + items.map(function (it, i) {
+      var v = visaOf(it.cc), icon = it.type === 'country' ? ICON.flag : it.type === 'airport' ? ICON.plane : ICON.city;
+      return '<button type="button" class="row tall" data-act="pick" data-i="' + i + '"><span class="tile" style="width:32px;height:32px;border-radius:8px;color:var(--accent)" aria-hidden="true">' + icon + '</span>' +
+        '<span class="grow"><span class="title">' + esc(it.name) + '</span>' + (it.sub ? '<span class="sub">' + esc(it.sub) + '</span>' : '') + '</span>' +
+        (v ? '<span class="status muted" style="font-size:13px;white-space:nowrap"><span class="dot' + VISA_DOT[v[0]] + '"></span>' + VISA_TEXT[v[0]] + '</span>' : '') + '</button>';
+    }).join('') + '</div>';
+    return html;
+  }
+  function renderDestResults() {
+    var box = document.getElementById('dest-results');
+    if (box) box.innerHTML = destResultsHtml();
+    var clear = document.getElementById('dest-clear');
+    if (clear) clear.style.visibility = S.destQuery ? 'visible' : 'hidden';
+  }
+  function screenDest() {
+    var f = S.form;
+    var html = '<h1 class="h1" style="margin:0 4px">Куда летим</h1>' +
+      '<div class="search">' + '<span class="muted" aria-hidden="true">' + ICON.lens + '</span><label for="dest-q" class="sr">Город, страна или код аэропорта</label>' +
+      '<input id="dest-q" type="search" enterkeyhint="search" autocomplete="off" data-in="dest" placeholder="' + (f && f.mode === 'country' ? 'Страна или город' : 'Город, страна или код') + '" value="' + esc(S.destQuery) + '">' +
+      '<button type="button" id="dest-clear" data-act="dclear" aria-label="Очистить поиск" style="visibility:' + (S.destQuery ? 'visible' : 'hidden') + '">' + ICON.clear + '</button></div>' +
+      '<section class="group" id="dest-results" aria-live="polite">' + destResultsHtml() + '</section>' +
+      '<p class="note">Метка визы — для паспорта РФ. Правила меняются, перед поездкой проверьте их.</p>';
+    return { html: html, after: function () { var i = document.getElementById('dest-q'); if (i && !S.destQuery) setTimeout(function () { i.focus(); }, 250); } };
+  }
+
+  // ---- настройки ----
+  function airportsSummary() {
+    var all = S.snap.a || [], on = enabledCodes();
+    return { codes: on, text: on.length + ' из ' + all.length };
+  }
+  function screenSettings() {
+    var s = S.snap, r = setting('radius'), car = setting('car'), q = setting('quiet'), vm = setting('visa'), px = setting('pax');
+    var aps = airportsSummary(), maxR = Math.max(600, r);
+    var html = '<h1 class="h1" style="margin:0 4px">Настройки</h1>';
+    html += '<section class="group" aria-labelledby="s-from"><h2 class="cap" id="s-from">Откуда вылетаем</h2><div class="card list">' +
+      '<button type="button" class="row" data-act="go" data-to="city"><span style="flex:1">Город</span><span class="val">' + esc(s.h ? s.h.n : 'не выбран') + '</span>' + ICON.chev + '</button>' +
+      '<div style="padding:12px 16px 14px;display:flex;flex-direction:column;gap:10px"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><label for="radius">Искать аэропорты в радиусе</label><span class="num" id="radius-val" style="font-weight:600">' + r + NB + 'км</span></div>' +
+      '<div class="slider"><span class="track"></span><span class="fill" id="radius-fill" style="left:0;right:calc(14px + (100% - 28px) * ' + (1 - (r - 50) / (maxR - 50)).toFixed(4) + ')"></span><input id="radius" type="range" min="50" max="' + maxR + '" step="10" value="' + r + '" data-in="radius"></div>' +
+      '<div class="scale num"><span>50 км</span><span>' + maxR + ' км</span></div></div>' +
+      '<button type="button" class="row tall" data-act="go" data-to="airports" data-from="settings"><span class="grow"><span class="title">Аэропорты и дорога</span><span class="sub">' + esc(aps.codes.join(', ') || 'ни один не выбран') + '</span></span><span class="val num">' + aps.text + '</span>' + ICON.chev + '</button>' +
+      '<button type="button" class="row" data-act="go" data-to="car"><span style="flex:1">Своя машина</span><span class="val num">' + (car[0] ? String(car[0]).replace('.', ',') + NB + 'л на 100' + NB + 'км' : 'не учитывать') + '</span>' + ICON.chev + '</button></div>' +
+      '<p class="note">Радиус и город меняют список аэропортов — бот пересчитает его после сохранения.</p></section>';
+    html += '<section class="group" aria-labelledby="s-new"><h2 class="cap" id="s-new">Для новых отслеживаний</h2><div class="card"><button type="button" class="row tall" data-act="go" data-to="defaults"><span class="grow"><span class="title">Пассажиры, багаж и условия</span><span class="sub">' +
+      pax(px) + ', ' + BAG[setting('bag')] + ', от −' + setting('thr') + '%</span></span>' + ICON.chev + '</button></div></section>';
+    var hours = ''; for (var h = 0; h < 24; h++) hours += '<option value="' + h + '">' + String(h).padStart(2, '0') + ':00</option>';
+    var qq = q || [23, 8];
+    html += '<section class="group" aria-labelledby="s-notify"><h2 class="cap" id="s-notify">Уведомления</h2><div class="card list">' +
+      '<div class="row" style="min-height:52px;padding:8px 16px"><span id="quiet-l" style="flex:1">Тихие часы</span><button type="button" class="switch" role="switch" aria-checked="' + !!q + '" aria-labelledby="quiet-l" data-act="quiet"></button></div>' +
+      (q ? '<div class="row" style="min-height:52px;padding:8px 16px;gap:8px"><span style="flex:1">Без звука</span><span class="muted">с</span><select data-in="qfrom" aria-label="Начало тихих часов" class="num" style="height:34px;border:0;border-radius:8px;background:var(--fill);padding:0 8px;font-size:17px">' + hours.replace('value="' + qq[0] + '"', 'value="' + qq[0] + '" selected') + '</select><span class="muted">до</span>' +
+        '<select data-in="qto" aria-label="Конец тихих часов" class="num" style="height:34px;border:0;border-radius:8px;background:var(--fill);padding:0 8px;font-size:17px">' + hours.replace('value="' + qq[1] + '"', 'value="' + qq[1] + '" selected') + '</select></div>' : '') +
+      '</div><p class="note">В тихие часы находки приходят без звука. Одну и ту же цену дважды не присылаю.</p></section>';
+    var visaRows = [['free', 'Только без визы', 'Турция, Китай, ОАЭ, Армения и другие'], ['easy', 'Ещё и с простой визой', 'По прилёту или электронная: Египет, Индия, Индонезия'], ['all', 'Все страны', 'И те, где визу нужно оформлять заранее']];
+    html += '<section class="group" aria-labelledby="s-visa"><h2 class="cap" id="s-visa">Какие страны показывать, паспорт РФ</h2><div class="card list" role="radiogroup" aria-labelledby="s-visa">' + visaRows.map(function (v) {
+      return '<button type="button" class="row tall" role="radio" aria-checked="' + (vm === v[0]) + '" data-act="visa" data-v="' + v[0] + '"><span class="grow"><span class="title">' + v[1] + '</span><span class="sub">' + v[2] + '</span></span><span style="color:var(--accent);visibility:' + (vm === v[0] ? 'visible' : 'hidden') + '">' + ICON.check + '</span></button>';
+    }).join('') + '</div><p class="note">Влияет на поиск «Куда угодно».' + (s.vo ? ' Ещё ' + count(s.vo, 'страна настроена', 'страны настроены', 'стран настроено') + ' вручную в чате: /settings → Визы.' : '') + '</p></section>';
+    if (s.me && s.me.ad) {
+      html += '<section class="group" aria-labelledby="s-admin"><h2 class="cap" id="s-admin">Видно только администратору</h2><div class="card list">' +
+        '<button type="button" class="row act" data-act="admin" data-op="admin.users">Пользователи</button>' +
+        '<button type="button" class="row act" data-act="admin" data-op="admin.status">Состояние бота</button>' +
+        '<button type="button" class="row act" data-act="admin" data-op="admin.backup">Сделать резервную копию базы</button></div><p class="note">Ответ придёт в чат.</p></section>';
+    }
+    var main = hasPending() ? { text: 'Сохранить', action: function () { send({ op: 'settings', s: S.pending }); } } : null;
+    return { html: html, main: main };
+  }
+  function screenDefaults() {
+    var px = setting('pax'), mp = setting('maxp');
+    var html = '<h1 class="h1" style="margin:0 4px">Для новых отслеживаний</h1>' +
+      '<section class="group" aria-labelledby="d-who"><h2 class="cap" id="d-who">Кто летит</h2><div class="card list">' + paxBlock(px).replace(/data-act="pax"/g, 'data-act="dpax"') +
+      '<div style="padding:12px 16px 14px;display:flex;flex-direction:column;gap:8px"><span class="muted" style="font-size:15px">Багаж</span><div class="seg" role="group" aria-label="Багаж">' +
+      segBtns('dbag', [['hand', 'Ручная кладь'], ['bag', 'С багажом'], ['any', 'Не важно']], setting('bag')) + '</div></div></div></section>' +
+      '<section class="group" aria-labelledby="d-rules"><h2 class="cap" id="d-rules">Условия</h2><div class="card list">' +
+      '<div style="padding:12px 16px 14px;display:flex;flex-direction:column;gap:8px"><span class="muted" style="font-size:15px">Пересадки</span><div class="seg" role="group" aria-label="Пересадки">' +
+      segBtns('dstops', [[0, 'Прямые'], [1, 'До одной'], [2, 'До двух']], setting('stops')) + '</div></div>' +
+      '<div class="field"><label for="d-budget">Билеты не дороже</label><input id="d-budget" type="text" inputmode="numeric" autocomplete="off" data-in="dbudget" placeholder="без лимита" value="' + (mp ? String(mp).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '') + '"><span class="unit">₽</span></div>' +
+      '<div style="padding:12px 16px 14px;display:flex;flex-direction:column;gap:10px"><span class="muted" style="font-size:15px">Писать, если дешевле обычного хотя бы на</span><div class="chips five" role="group" aria-label="Порог выгоды">' +
+      THRESHOLDS.map(function (v) { return '<button type="button" class="chip" data-act="dthr" data-v="' + v + '" aria-pressed="' + (v === setting('thr')) + '">' + v + '%</button>'; }).join('') + '</div></div></div>' +
+      '<p class="note">Это значения по умолчанию для формы нового отслеживания. Уже созданные отслеживания не меняются.</p></section>';
+    return { html: html, main: { text: 'Готово', action: goBack } };
+  }
+  function screenCar() {
+    var car = setting('car');
+    var field = function (id, label, value, unit, hint) {
+      return '<div class="field"><label for="' + id + '">' + label + (hint ? '<span class="muted" style="display:block;font-size:13px;line-height:18px">' + hint + '</span>' : '') + '</label><input id="' + id + '" type="text" inputmode="decimal" autocomplete="off" data-in="' + id + '" value="' + String(value).replace('.', ',') + '"><span class="unit">' + unit + '</span></div>';
+    };
+    var html = '<h1 class="h1" style="margin:0 4px">Своя машина</h1><div class="card list">' +
+      field('car-cons', 'Расход', car[0], 'л', '0 — машину не учитывать') + field('car-fuel', 'Цена бензина', car[1], '₽/л') + field('car-park', 'Парковка у аэропорта', car[2], '₽/сут') +
+      '</div><p class="note">По машине считаю бензин до аэропорта и обратно и парковку на время поездки — если это дешевле поезда, автобуса и такси.</p>';
+    return { html: html, main: { text: 'Готово', action: function () { if (readCar()) goBack(); } } };
+  }
+  function num(v) { return parseFloat(String(v).replace(/\s/g, '').replace(',', '.')); }
+  function readCar() {
+    var cons = num(document.getElementById('car-cons').value), fuel = num(document.getElementById('car-fuel').value), park = num(document.getElementById('car-park').value);
+    if (isNaN(cons) || !(cons === 0 || (cons >= 2 && cons <= 40))) { alertBox('Расход — от 2 до 40 литров на 100 км (или 0, если машину не учитывать).'); return false; }
+    if (isNaN(fuel) || fuel < 10 || fuel > 500) { alertBox('Цена бензина — от 10 до 500 ₽ за литр.'); return false; }
+    if (isNaN(park) || park < 0 || park > 20000) { alertBox('Парковка — от 0 до 20 000 ₽ в сутки.'); return false; }
+    setPending('car', [Math.round(cons * 10) / 10, Math.round(fuel * 10) / 10, Math.round(park)]);
+    return true;
+  }
+  function screenCity() {
+    var html = '<h1 class="h1" style="margin:0 4px">Город</h1><p class="lead" style="margin:0 4px">Сейчас: ' + esc(S.snap.h ? S.snap.h.n + (S.snap.h.rg ? ', ' + S.snap.h.rg : '') : 'не выбран') + '</p>' +
+      '<div class="search"><span class="muted" aria-hidden="true">' + ICON.lens + '</span><label for="city-q" class="sr">Название города</label><input id="city-q" type="search" enterkeyhint="go" autocomplete="off" data-in="city" placeholder="Например, Ставрополь" value="' + esc(S.cityQuery) + '"></div>' +
+      '<p class="note">Я найду город и пришлю варианты в чат — выберите нужный, и бот пересчитает аэропорты рядом.</p>';
+    return { html: html, main: { text: 'Найти', action: function () {
+      var q = S.cityQuery.trim();
+      if (q.length < 2) { alertBox('Напишите название города.'); return; }
+      send({ op: 'home.find', q: q.slice(0, 100) });
+    } }, after: function () { var i = document.getElementById('city-q'); if (i) setTimeout(function () { i.focus(); }, 250); } };
+  }
+  var NOTE = { noflights: 'по данным Aviasales рейсов нет', noroute: 'дорога ещё не посчитана', local: 'аэропорт рядом с домом', nokey: 'поезда и автобусы появятся с ключом Яндекс Расписаний', none: 'дорогу не нашёл', error: 'расписания не ответили', nohome: 'расписания не знают ваш город' };
+  var KIND_NAME = { public: 'Транспорт', car: 'Своя машина', taxi: 'Такси' };
+  function screenAirports(p) {
+    var all = S.snap.a || [], on = enabledCodes();
+    var html = '<div class="hero"><h1 class="h1">Аэропорты и дорога</h1><p class="lead">' + (S.snap.h ? esc(S.snap.h.n) + ', радиус ' + S.snap.h.r + NB + 'км: ' : '') +
+      count(all.length, 'аэропорт', 'аэропорта', 'аэропортов') + ', в поиске ' + plural(on.length, 'участвует', 'участвуют', 'участвуют') + ' ' + on.length + '. Расстояние — по прямой.</p></div>';
+    if (!all.length) html += '<div class="card empty"><b>Аэропортов нет</b><span class="muted">Увеличьте радиус в настройках или выберите другой город.</span></div>';
+    else {
+      html += '<section class="card list inset68" aria-label="Аэропорты">' + all.map(function (a) {
+        var enabled = airportOn(a), pref = airportPref(a), opts = a[6] || [], open = S.openAirport === a[0];
+        var chosen = opts.filter(function (o) { return o[0] === pref; })[0] || opts[0];
+        var line = a[2] + NB + 'км';
+        if (chosen) line += ', ' + chosen[1] + (chosen[3] ? ' ' + duration(chosen[3]) : '') + ', ' + (chosen[4] ? '≈' + NB : '') + money(chosen[2]);
+        else if (a[5] && NOTE[a[5]]) line += ', ' + NOTE[a[5]];
+        var item = '<div><div style="display:flex;align-items:center;gap:8px;padding-right:16px"><button type="button" class="row tall" style="flex:1;min-width:0;padding-right:0" data-act="apt-open" data-code="' + a[0] + '" aria-expanded="' + open + '">' +
+          '<span class="num" style="width:40px;flex:none;font-size:15px;font-weight:700;color:' + (enabled ? 'var(--text)' : 'var(--muted)') + '">' + esc(a[0]) + '</span><span class="grow"><span class="title" style="' + (enabled ? '' : 'color:var(--muted)') + '">' + esc(a[1]) + '</span><span class="sub num" style="white-space:normal">' + line + '</span></span>' +
+          '<span style="color:var(--hint);flex:none;transform:rotate(' + (open ? 90 : 0) + 'deg)">' + ICON.chev + '</span></button>' +
+          '<button type="button" class="switch" role="switch" aria-checked="' + enabled + '" aria-label="Искать из ' + esc(a[1]) + ', ' + esc(a[0]) + '" data-act="apt-on" data-code="' + a[0] + '"></button></div>';
+        if (open) {
+          item += '<div style="margin:0 16px 12px 68px;border-radius:10px;background:var(--bg);overflow:hidden">';
+          if (a[7]) item += '<p class="muted" style="margin:0;padding:8px 12px 0;font-size:13px;line-height:18px">Аэропорт «' + esc(a[7]) + '»' + (a[8] ? ', ' + a[8] + NB + 'км по дороге' : '') + '</p>';
+          if (opts.length) {
+            item += '<div class="list" role="radiogroup" aria-label="Как добираться до ' + esc(a[1]) + '">' + opts.map(function (o) {
+              var sel = o === chosen;
+              return '<button type="button" class="row" role="radio" aria-checked="' + sel + '" data-act="apt-pref" data-code="' + a[0] + '" data-kind="' + o[0] + '" style="min-height:52px;padding:7px 12px"><span class="grow"><span style="font-size:15px;line-height:20px">' + esc(o[1].charAt(0).toUpperCase() + o[1].slice(1)) +
+                '</span><span class="sub">' + (o[3] ? 'в пути ' + duration(o[3]) : KIND_NAME[o[0]] || '') + '</span></span><span class="num" style="font-size:15px">' + (o[4] ? '≈' + NB : '') + money(o[2]) + '</span><span style="color:var(--accent);visibility:' + (sel ? 'visible' : 'hidden') + '">' + ICON.check + '</span></button>';
+            }).join('') + '</div>';
+            if (pref) item += '<button type="button" class="link" style="padding:8px 12px 10px;font-size:15px" data-act="apt-pref" data-code="' + a[0] + '" data-kind="">Считать самый дешёвый вариант</button>';
+          } else item += '<p class="muted" style="margin:0;padding:10px 12px;font-size:13px;line-height:18px">' + (NOTE[a[5]] ? NOTE[a[5]].charAt(0).toUpperCase() + NOTE[a[5]].slice(1) + '.' : 'Вариантов дороги пока нет.') + '</p>';
+          item += '</div>';
+        }
+        return item + '</div>';
+      }).join('') + '</section>';
+    }
+    var people = Math.max(1, S.snap.df.px[0] + S.snap.df.px[1]);
+    html += '<p class="note">Цены дороги — туда и обратно для ' + count(people, 'пассажира', 'пассажиров', 'пассажиров') + ', поездка на неделю. Нажмите на аэропорт, чтобы выбрать, как добираться. Автобусы и поезда — <a href="https://rasp.yandex.ru/" data-act="link" data-url="https://rasp.yandex.ru/">Яндекс Расписания</a>, дороги — © участники OpenStreetMap.</p>';
+    var main;
+    if (p.from === 'form') main = { text: 'Готово', action: goBack };
+    else main = hasPending() ? { text: 'Сохранить', action: function () { send({ op: 'settings', s: S.pending }); } } : null;
+    return { html: html, main: main };
+  }
+
+  var SCREENS = { main: screenMain, tracking: screenTracking, deal: screenDeal, form: screenForm, dest: screenDest, settings: screenSettings, defaults: screenDefaults, car: screenCar, city: screenCity, airports: screenAirports };
+
+  function render() {
+    var cur = top();
+    var out = (SCREENS[cur.name] || screenMain)(cur);
+    root.innerHTML = out.html;
+    applyButtons(out.main || null, out.second || null, S.stack.length > 1);
+    if (out.after) out.after();
+    document.title = (root.querySelector('h1') || {}).textContent || 'Дешёвые авиабилеты';
+  }
+
+  // ================= действия =================
+  function rerender() { var y = window.scrollY; render(); window.scrollTo(0, y); }
+  var ACTIONS = {
+    go: function (d) { if (d.to === 'dest') { S.destQuery = ''; S.destResults = null; } go(d.to, { id: d.id ? +d.id : null, from: d.from || null }); },
+    refresh: function () { send({ op: 'refresh' }); },
+    deal: function (d) { go('deal', { src: d.src, id: d.id ? +d.id : null, idx: d.idx != null ? +d.idx : null }); },
+    chart: function (d) { S.chartDays = +d.days; haptic('select'); rerender(); },
+    check: function (d) { send({ op: 'track.check', id: +d.id }); },
+    pause: function (d) { send({ op: 'track.pause', id: +d.id }); },
+    resume: function (d) { send({ op: 'track.resume', id: +d.id }); },
+    delete: function (d) {
+      var t = trackingById(+d.id);
+      confirmBox('Удалить «' + (t ? t.n : '') + '»? История цен тоже удалится.', 'Удалить').then(function (ok) { if (ok) send({ op: 'track.delete', id: +d.id }); });
+    },
+    return: function (d) { send({ op: 'deal.return', deal: +d.deal, w: d.w }); },
+    link: function (d, el, ev) { ev.preventDefault(); openLink(d.url); },
+    admin: function (d) { send({ op: d.op }); },
+    fmode: function (d) { var f = S.form; if (f.mode !== d.v) { f.mode = d.v; f.code = null; f.name = null; f.cc = null; f.dirty = true; } haptic('select'); rerender(); },
+    dmode: function (d) { S.form.dmode = d.v; S.form.dirty = true; haptic('select'); rerender(); },
+    month: function (d) { S.form.month = d.v; S.form.dirty = true; haptic('select'); rerender(); },
+    cal: function (d) { S.form.calMonth = d.m; rerender(); },
+    day: function (d) {
+      var f = S.form; f.dirty = true;
+      if (!f.from || !f.picking) { f.from = d.d; f.to = d.d; f.picking = true; }
+      else { if (d.d < f.from) { f.to = f.from; f.from = d.d; } else f.to = d.d; f.picking = false; }
+      haptic('select'); rerender();
+    },
+    trip: function (d) { S.form.trip = d.v; S.form.dirty = true; haptic('select'); rerender(); },
+    pax: function (d) {
+      var f = S.form, p = f.px.slice(); p[+d.k] += +d.d;
+      if (paxOk(p)) { f.px = p; f.dirty = true; haptic('select'); rerender(); }
+    },
+    fbag: function (d) { S.form.bag = d.v; S.form.dirty = true; rerender(); },
+    fstops: function (d) { S.form.stops = +d.v; S.form.dirty = true; rerender(); },
+    fthr: function (d) { S.form.thr = +d.v; S.form.dirty = true; rerender(); },
+    dclear: function () { S.destQuery = ''; S.destResults = null; var i = document.getElementById('dest-q'); if (i) { i.value = ''; i.focus(); } renderDestResults(); },
+    pick: function (d) {
+      var it = destItems()[+d.i], f = S.form;
+      if (!it || !f) return;
+      if (it.type === 'country') { f.mode = 'country'; f.cc = it.code; f.name = it.name; f.code = null; }
+      else { f.mode = 'city'; f.code = it.code; f.name = it.type === 'airport' ? (it.city || it.name) : it.name; f.cc = it.cc || null; }
+      f.dirty = true; haptic('light'); goBack();
+    },
+    quiet: function () { var q = setting('quiet'); setPending('quiet', q ? [] : [23, 8]); haptic('select'); rerender(); },
+    visa: function (d) { setPending('visa', d.v); haptic('select'); rerender(); },
+    dpax: function (d) { var p = setting('pax').slice(); p[+d.k] += +d.d; if (paxOk(p)) { setPending('pax', p); haptic('select'); rerender(); } },
+    dbag: function (d) { setPending('bag', d.v); rerender(); },
+    dstops: function (d) { setPending('stops', +d.v); rerender(); },
+    dthr: function (d) { setPending('thr', +d.v); rerender(); },
+    'apt-open': function (d) { S.openAirport = S.openAirport === d.code ? null : d.code; rerender(); },
+    'apt-on': function (d) {
+      var a = (S.snap.a || []).filter(function (x) { return x[0] === d.code; })[0];
+      setAirport(d.code, !airportOn(a)); haptic('select'); rerender();
+    },
+    'apt-pref': function (d) { setPref(d.code, d.kind || null); haptic('select'); rerender(); }
+  };
+  root.addEventListener('click', function (ev) {
+    var el = ev.target.closest('[data-act]');
+    if (!el || el.disabled) return;
+    var fn = ACTIONS[el.getAttribute('data-act')];
+    if (fn) fn(el.dataset, el, ev);
+  });
+  root.addEventListener('input', function (ev) {
+    var el = ev.target, k = el.getAttribute('data-in');
+    if (!k) return;
+    if (k === 'dest') { S.destQuery = el.value; renderDestResults(); autocomplete(el.value); return; }
+    if (k === 'city') { S.cityQuery = el.value; return; }
+    if (k === 'budget' || k === 'dbudget') {
+      var digits = el.value.replace(/\D/g, '').slice(0, 7), v = digits ? parseInt(digits, 10) : null;
+      var pretty = digits ? String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '';
+      if (el.value !== pretty) el.value = pretty;
+      if (k === 'budget') { S.form.maxp = v; S.form.dirty = true; } else setPending('maxp', v || 0);
+      return;
+    }
+    if (k === 'dmin' || k === 'dmax') {
+      var f = S.form, box = document.getElementById('days'), ins = box.querySelectorAll('input');
+      var lo = +ins[0].value, hi = +ins[1].value;
+      if (lo > hi) { if (k === 'dmin') { hi = lo; ins[1].value = hi; } else { lo = hi; ins[0].value = lo; } }
+      f.min = lo; f.max = hi; f.dirty = true;
+      document.getElementById('days-val').textContent = lo + '–' + hi;
+      var fill = document.getElementById('days-fill');
+      fill.style.left = 'calc(14px + (100% - 28px) * ' + ((lo - 1) / 29).toFixed(4) + ')';
+      fill.style.right = 'calc(14px + (100% - 28px) * ' + (1 - (hi - 1) / 29).toFixed(4) + ')';
+      return;
+    }
+    if (k === 'radius') {
+      var r = +el.value, max = +el.max;
+      document.getElementById('radius-val').textContent = r + NB + 'км';
+      document.getElementById('radius-fill').style.right = 'calc(14px + (100% - 28px) * ' + (1 - (r - 50) / (max - 50)).toFixed(4) + ')';
+    }
+  });
+  root.addEventListener('change', function (ev) {
+    var el = ev.target, k = el.getAttribute('data-in');
+    if (k === 'radius') { setPending('radius', +el.value); rerender(); }
+    if (k === 'qfrom' || k === 'qto') {
+      var q = (setting('quiet') || [23, 8]).slice();
+      q[k === 'qfrom' ? 0 : 1] = +el.value;
+      setPending('quiet', q[0] === q[1] ? [] : q); rerender();
+    }
+  });
+  root.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter' && ev.target.getAttribute && ev.target.getAttribute('data-in') === 'city') { ev.preventDefault(); if (buttons.main) buttons.main.action(); }
+    if (ev.key === 'Enter' && ev.target.getAttribute && ev.target.getAttribute('data-in') === 'dest') { ev.preventDefault(); ev.target.blur(); }
+  });
+
+  // ================= запуск =================
+  function fail(title, text) {
+    root.innerHTML = '<div class="card empty" style="margin-top:24px"><b>' + esc(title) + '</b><span class="muted">' + esc(text) + '</span></div>';
+    applyButtons(null, null, false);
+  }
+  function start(tg) {
+    var b = bridge();
+    TG = tg || b;
+    NATIVE = !!tg;
+    applyTheme();
+    if (NATIVE) {
+      try {
+        TG.ready(); TG.expand();
+        if (version('7.7') && TG.disableVerticalSwipes) TG.disableVerticalSwipes();
+        TG.onEvent('themeChanged', function () { applyTheme(); render(); });
+        TG.MainButton.onClick(onMain);
+        if (TG.SecondaryButton) TG.SecondaryButton.onClick(onSecond);
+        if (version('6.1')) TG.BackButton.onClick(goBack);
+      } catch (e) { /* очень старый клиент */ }
+    } else { try { TG.ready(); TG.expand(); } catch (e) { /* вне Telegram */ } }
+    var hp = hashParams();
+    var packed = hp.s || hp.d;
+    if (!packed) { fail('Откройте приложение из Telegram', 'Нажмите кнопку «✈️ Открыть приложение» внизу чата с ботом.'); return; }
+    unpack(packed).then(function (data) {
+      if (hp.s) {
+        S.snap = data; S.mode = 'full';
+        S.stack = [{ name: 'main' }];
+      } else {
+        S.mode = 'deal'; S.snap = { a: [], t: [], d: [], df: { px: [1, 0, 0] } }; S.deal = data;
+        S.stack = [{ name: 'deal', src: 'x' }];
+      }
+      if (data.v > 1) toast('Бот новее приложения — обновите страницу приложения на хостинге.');
+      render();
+    }).catch(function () {
+      fail('Не получилось прочитать данные', 'Нажмите в чате /app — бот пришлёт свежую кнопку приложения.');
+    });
+  }
+  loadTelegram().then(start);
+})();
+</script>
+</body>
+</html>
