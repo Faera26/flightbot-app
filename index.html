@@ -267,6 +267,24 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
 
 .sortbar{display:flex;align-items:center;gap:10px;margin:4px 0 16px;font-size:14px}
 .sortbar .seg{max-width:320px}
+.refresh-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;font-size:14px;line-height:19px}
+.btn.small{width:auto;height:34px;padding:0 14px;font-size:14px;border-radius:17px;flex:none}
+.more-dates{margin:10px 0 0;align-items:center}
+.more-dates .muted{font-size:14px;white-space:nowrap;margin-right:2px}
+.grp{display:flex;flex-direction:column}
+.grp.open>.tk{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.opts{background:var(--section);border-radius:0 0 22px 22px;box-shadow:var(--shadow);padding:0 0 6px;position:relative}
+.opts::before{content:"";position:absolute;left:16px;right:16px;top:0;height:1px;background:var(--sep)}
+.opt{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--text);text-align:left;padding:11px 14px 11px 16px;font:inherit}
+.opt+.opt{border-top:1px solid var(--sep)}
+.opt .w{flex:1;min-width:0}
+.opt .w b{display:block;font-size:15px;line-height:20px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.opt .w span{display:block;font-size:13px;line-height:17px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.opt .p{text-align:right;flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.opt .p b{font-family:var(--display);font-size:17px;line-height:21px;font-weight:800;letter-spacing:-.3px}
+.tag.more{background:var(--fill);color:var(--text)}
+.chev{display:inline-block}
+.grp.open .chev{transform:rotate(180deg)}
 </style>
 </head>
 <body>
@@ -828,6 +846,36 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
 
   // ================= «Горячее» =================
   function hotScope() { return S.ff.scope || S.snap.hs || 'abroad'; }
+  // Один город — одна карточка: варианты (даты, туда-обратно, аэропорты) раскрываются списком
+  function groupsOf(list) {
+    var map = {}, out = [];
+    list.forEach(function (T) { var k = T.tc || T.t; if (!map[k]) { map[k] = []; out.push(map[k]); } map[k].push(T); });
+    return out;
+  }
+  function whenOf(T) {
+    var d1 = pd(T.d1);
+    if (T.k === 'rt' && T.d2) return rangeText(d1, pd(T.d2));
+    return WEEKDAYS[(d1.getDay() + 6) % 7] + ', ' + d1.getDate() + NB + MONTHS_SHORT[d1.getMonth()];
+  }
+  function dayOf(T) { var d1 = pd(T.d1); return T.k === 'rt' && T.d2 ? rangeText(d1, pd(T.d2)) : d1.getDate() + NB + MONTHS_SHORT[d1.getMonth()]; }
+  function optRow(T) {
+    var kind = T.mx ? (sameAirport(T) ? 'два билета' : 'обратно в ' + esc(T.mx.b)) : T.k === 'rt' ? 'туда-обратно' : 'в одну сторону';
+    var sub = 'из ' + esc(fromCity(T.fn)) + (T.k === 'rt' ? '' : ', вылет ' + esc(T.dep)) + ', ' + (T.x < 0 ? 'пересадки уточняйте' : tripStops(T));
+    return '<button type="button" class="opt" data-act="deal" data-src="f" data-idx="' + T.idx + '"><span class="w"><b>' + esc(whenOf(T)) + ' · ' + kind + '</b><span>' + sub + '</span></span>' +
+      '<span class="p"><b class="num">' + money(T.p) + '</b>' + (T.dc ? '<span class="badge num">−' + T.dc + '%</span>' : '') + '</span></button>';
+  }
+  function groupCard(g) {
+    var T = g[0];
+    if (g.length === 1) return cardHtml(T, 'data-act="deal" data-src="f" data-idx="' + T.idx + '"');
+    var open = !!S.open[T.tc], min = Math.min.apply(null, g.map(function (x) { return x.p; }));
+    var best = Math.max.apply(null, g.map(function (x) { return x.dc || 0; }));
+    var days = g.map(dayOf).join(', ');
+    var head = '<button type="button" class="tk" data-act="grp" data-k="' + esc(T.tc) + '" aria-expanded="' + open + '"><span class="sw" style="background:' + sky(hourOf(T)) + '">' + esc(T.t) + '</span>' +
+      '<span class="mid"><span class="c" style="display:block">' + esc(T.tn) + ' ' + flagOf(T.cc) + '</span><span class="m" style="display:block">' + esc(days) + '</span>' +
+      '<span class="tags"><span class="tag more">' + count(g.length, 'вариант', 'варианта', 'вариантов') + ' <span class="chev" aria-hidden="true">▾</span></span></span></span>' +
+      '<span class="pr"><b class="num">от ' + money(min) + '</b>' + (best ? '<span class="badge num">до −' + best + '%</span>' : '') + '</span></button>';
+    return '<div class="grp' + (open ? ' open' : '') + '">' + head + (open ? '<div class="opts">' + g.map(optRow).join('') + '</div>' : '') + '</div>';
+  }
   function feedItems() {
     var f = S.snap.f, ff = S.ff, scope = hotScope();
     if (!f || !f.it) return [];
@@ -853,7 +901,10 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     (f && f.it || []).forEach(function (it) { if (origins.indexOf(it[F.f]) < 0) origins.push(it[F.f]); });
     var scope = hotScope();
     var sub = h ? 'Бот сам просматривает все направления из ' + count(origins.length || enabledCodes().length, 'аэропорта', 'аэропортов', 'аэропортов') + ' рядом ' + withPrep(nearCity(h.n)) + ' и собирает самые выгодные билеты. Для своей поездки на нужные даты — вкладка «Слежу».' : 'Выберите город в настройках';
-    var html = '<section class="hero"><h1 class="h1">Горячее</h1><p class="lead">' + sub + '</p></section>';
+    var html = '<section class="hero"><h1 class="h1">Горячее</h1><p class="lead">' + sub + '</p>';
+    if (f && f.at) html += '<div class="refresh-row"><span class="muted">Цены проверены ' + esc(checkedWhen(f.at)) + '</span>' +
+      (S.mode === 'full' ? '<button type="button" class="btn ghost small" data-act="hotref">Обновить</button>' : '') + '</div>';
+    html += '</section>';
     html += '<div class="seg" role="group" aria-label="Куда" style="margin-bottom:12px">' + segBtn('fscope', 'abroad', 'За границу', scope === 'abroad') +
       segBtn('fscope', 'home', 'По России', scope === 'home') + segBtn('fscope', 'all', 'Всё', scope === 'all') + '</div>';
     html += '<div class="chips scroll" role="group" aria-label="Фильтры">' + chip('fkind', 'all', 'Все билеты', ff.kind === 'all') + chip('fkind', 'rt', 'Туда-обратно', ff.kind === 'rt') +
@@ -880,18 +931,31 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
       html += '<div class="card empty"><b>' + (scope === 'abroad' ? 'За границу под эти фильтры ничего нет' : scope === 'home' ? 'По России под эти фильтры ничего нет' : 'Под эти фильтры ничего нет') + '</b><span class="muted">' + hint + '</span></div>';
       return { html: html };
     }
-    var top = list[0];
+    var groups = groupsOf(list), first = groups[0], top = first[0];
     html += '<button type="button" class="pass" data-act="deal" data-src="f" data-idx="' + top.idx + '" aria-label="Лучшее: ' + esc(top.tn) + ', ' + money(top.p) + '">' + passHtml(top) + '</button>';
-    if (list.length > 1) {
-      html += '<section class="group"><div class="cap-row"><h2 class="cap">Ещё ' + count(list.length - 1, 'билет', 'билета', 'билетов') + '</h2></div><div class="feed">' +
-        list.slice(1).map(function (T) { return cardHtml(T, 'data-act="deal" data-src="f" data-idx="' + T.idx + '"'); }).join('') + '</div></section>';
+    if (first.length > 1) {
+      html += '<div class="chips scroll more-dates" role="group" aria-label="Ещё даты: ' + esc(top.tn) + '"><span class="muted">Ещё ' + esc(top.tn) + ':</span>' +
+        first.slice(1).map(function (T) { return '<button type="button" class="chip" data-act="deal" data-src="f" data-idx="' + T.idx + '">' + esc(dayOf(T)) + ' · ' + money(T.p) + '</button>'; }).join('') + '</div>';
+    }
+    if (groups.length > 1) {
+      html += '<section class="group"><div class="cap-row"><h2 class="cap">Ещё ' + count(groups.length - 1, 'направление', 'направления', 'направлений') + '</h2></div><div class="feed">' +
+        groups.slice(1).map(groupCard).join('') + '</div></section>';
     }
     var pool = scope === 'abroad' ? f.na : scope === 'home' ? f.nh : f.n;
-    var inPool = f.it.filter(function (it) { var ab = it[F.ab] != null ? !!it[F.ab] : true; return scope === 'all' || (scope === 'abroad' ? ab : !ab); }).length;
-    var shown = pool > inPool ? 'Здесь ' + inPool + ' самых выгодных из ' + count(pool, 'найденного билета', 'найденных билетов', 'найденных билетов') + '. ' : '';
+    var cities = {};
+    f.it.forEach(function (it) { var ab = it[F.ab] != null ? !!it[F.ab] : true; if (scope === 'all' || (scope === 'abroad' ? ab : !ab)) cities[it[F.tc] || it[F.t]] = 1; });
+    var inPool = Object.keys(cities).length;
+    var shown = pool > inPool ? 'Здесь ' + inPool + ' самых выгодных направлений из ' + pool + '. ' : '';
     html += '<p class="note">' + shown + 'Цены за человека — из поисков на Aviasales за последние двое суток' + (f.at ? ', проверены в ' + esc(f.at.slice(11, 16)) : '') + '; обновляю каждые 3 часа. Вылеты раньше чем через 3 дня не показываю: дешёвые места на них почти всегда раскуплены. «Обычно» — типичная самая низкая цена этого направления в другие месяцы или за прошлые дни. Что показывать по умолчанию и о чём писать в чат — в настройках.' +
       (S.snap.mx ? ' «Обратно в …» — два билета в одну сторону, так дешевле с дорогой.' : '') + '</p>';
     return { html: html };
+  }
+  function checkedWhen(iso) {   // «2026-11-26T21:53» — местное время пользователя
+    var now = new Date(), two = function (n) { return String(n).padStart(2, '0'); };
+    var today = now.getFullYear() + '-' + two(now.getMonth() + 1) + '-' + two(now.getDate()), t = iso.slice(11, 16);
+    if (iso.slice(0, 10) === today) return 'в ' + t;
+    var d = pd(iso);
+    return d.getDate() + NB + MONTHS_SHORT[d.getMonth()] + ' в ' + t;
   }
   function withPrep(name) { return (/^[сзшжщ][^аеёиоуыэюя]/i.test(name) ? 'со ' : 'с ') + esc(name); }
   function nearCity(n) {
@@ -1074,7 +1138,7 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     stack: [], pending: {}, form: null,
     chartDays: 30, openAirport: null, destQuery: '', destResults: null, destBusy: false, destError: '',
     cityQuery: '',
-    ff: { kind: 'all', direct: false, visa: false, budget: false, ap: 'all', sort: 'value', scope: null }
+    ff: { kind: 'all', direct: false, visa: false, budget: false, ap: 'all', sort: 'value', scope: null }, open: {}
   };
   var root = document.getElementById('app');
 
@@ -1732,6 +1796,8 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     fap: function (d) { S.ff.ap = d.v; haptic('select'); rerender(); },
     fsort: function (d) { S.ff.sort = d.v || 'value'; haptic('select'); rerender(); },
     fscope: function (d) { S.ff.scope = d.v; haptic('select'); rerender(); },
+    grp: function (d) { S.open[d.k] = !S.open[d.k]; haptic('select'); rerender(); },
+    hotref: function () { send({ op: 'refresh', w: 'hot' }); },
     hscope: function (d) { setPending('hs', d.v); haptic('select'); rerender(); },
     inst: function () { setPending('inst', !setting('inst')); haptic('select'); rerender(); },
     mixret: function () { setPending('mix', !setting('mix')); haptic('select'); rerender(); },
