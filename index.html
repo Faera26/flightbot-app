@@ -218,10 +218,11 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
 .pt{display:flex;flex-direction:column;flex:none;max-width:42%}
 .pt.r{align-items:flex-end;text-align:right}
 .pt em{font-style:normal;font-size:14px;font-weight:650;margin-top:3px;opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.fly{flex:1;min-width:56px;margin:0 10px 30px;text-align:center;font-size:12.5px;font-weight:650;white-space:nowrap;position:relative;opacity:.92}
-.fly:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1.5px dashed rgba(255,255,255,.55)}
-.fly span{position:relative;padding:0 6px}
-.fly svg{width:17px;height:17px;fill:#fff;transform:rotate(90deg);vertical-align:-4px}
+.fly{flex:1;min-width:56px;margin:0 10px 34px;height:18px;position:relative;opacity:.95}
+.fly:before{content:"";position:absolute;left:0;right:0;top:8px;border-top:1.5px dashed rgba(255,255,255,.55)}
+.fly i{position:absolute;left:50%;top:0;width:18px;height:18px;margin-left:-9px}
+.fly svg{display:block;width:18px;height:18px;fill:#fff;transform:rotate(90deg)}
+.fly small{position:absolute;left:-12px;right:-12px;top:22px;text-align:center;font-size:12.5px;line-height:16px;font-weight:650;white-space:nowrap}
 .meta{margin-top:10px;font-size:14.5px;font-weight:550;opacity:.95}
 .perf{height:0;border-top:2px dashed var(--sep);margin:0 16px;position:relative}
 .perf:before,.perf:after{content:"";position:absolute;top:-12px;width:22px;height:22px;border-radius:50%;background:var(--bg)}
@@ -558,7 +559,7 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
       } else mb.hide();
       if (TG.SecondaryButton && version('7.10')) {
         var sb = TG.SecondaryButton;
-        if (second) sb.setParams({ text: second.text, is_visible: true, is_active: true, position: 'top', color: css('--section'), text_color: css('--text') });
+        if (second) sb.setParams({ text: second.text, is_visible: true, is_active: true, position: second.pos || 'top', color: css('--section'), text_color: css('--text') });
         else sb.hide();
       }
       if (version('6.1')) { if (back) TG.BackButton.show(); else TG.BackButton.hide(); }
@@ -622,7 +623,31 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
   }
 
   // ================= билет: общий вид для ленты, избранного и находок =================
-  var F = { k: 0, f: 1, t: 2, tc: 3, d1: 4, d2: 5, p: 6, u: 7, dc: 8, tk: 9, rd: 10, x: 11, xb: 12, m1: 13, m2: 14, a1: 15, s1: 16, a2: 17, s2: 18, al: 19, src: 20, ago: 21, mm: 22 };
+  var F = { k: 0, f: 1, t: 2, tc: 3, d1: 4, d2: 5, p: 6, u: 7, dc: 8, tk: 9, rd: 10, x: 11, xb: 12, m1: 13, m2: 14, a1: 15, s1: 16, a2: 17, s2: 18, al: 19, src: 20, ago: 21, mm: 22, mx: 23 };
+  // «Обратно — в другой аэропорт»: два билета в одну сторону (см. mix_array в webapp.py)
+  var MX = { b: 0, bf: 1, p1: 2, p2: 3, tk: 4, dr: 5, rt: 6, d1: 7, a1: 8, s1: 9, m1: 10, x1: 11, al1: 12, t1: 13, d2: 14, a2: 15, s2: 16, m2: 17, x2: 18, al2: 19, rd: 20, ax: 21 };
+  function mixFrom(a) {
+    if (!a || !a.length) return null;
+    var m = {};
+    Object.keys(MX).forEach(function (k) { m[k] = a[MX[k]]; });
+    m.rd = m.rd || [];
+    m.road = m.rd.reduce(function (s, r) { return s + (r[1] || 0); }, 0);
+    return m;
+  }
+  function withMix(T, m) {
+    if (!m) return T;
+    T.mx = m;
+    T.t = m.t1 || T.t; T.d1 = m.d1; T.dep = hhmm(m.d1); T.arr = m.a1; T.as = m.s1; T.m1 = m.m1; T.x = m.x1;
+    T.d2 = m.d2; T.rdep = hhmm(m.d2); T.rarr = m.a2; T.rs = m.s2; T.m2 = m.m2; T.xb = m.x2;
+    if (m.al1) { T.al = m.al1; T.aln = (S.snap.aln || {})[m.al1] || T.aln || m.al1; }
+    T.p = m.p1 + m.p2; T.tk = m.tk; T.rd = m.road ? [m.road, '', '', m.ax, 0] : null;
+    return T;
+  }
+  function codeName(T, code) {
+    var n = (T.o && T.o.an && T.o.an[code]) || nameOf(code);
+    return n && n !== code ? esc(shortCity(n)) + NB + esc(code) : esc(code);
+  }
+  function sameAirport(T) { return !T.mx || T.mx.b === T.f; }
   var SV = { id: 0, k: 1, f: 2, t: 3, tc: 4, d1: 5, d2: 6, sp: 7, p: 8, st: 9, ago: 10, x: 11, xb: 12, al: 13 };
   var SHORT_FROM = { 'Минеральные Воды': 'Минвод', 'Краснодар': 'Краснодара', 'Ставрополь': 'Ставрополя', 'Нальчик': 'Нальчика', 'Элиста': 'Элисты', 'Владикавказ': 'Владикавказа', 'Ростов-на-Дону': 'Ростова', 'Махачкала': 'Махачкалы', 'Грозный': 'Грозного', 'Москва': 'Москвы', 'Санкт-Петербург': 'Петербурга', 'Волгоград': 'Волгограда', 'Астрахань': 'Астрахани', 'Магас': 'Магаса' };
   var SHORT_CITY = { 'Минеральные Воды': 'Минводы', 'Санкт-Петербург': 'Петербург', 'Ростов-на-Дону': 'Ростов' };
@@ -638,13 +663,14 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
   function hhmm(iso) { return iso && iso.length >= 16 ? iso.slice(11, 16) : ''; }
   function ticketFromFeed(it) {
     var f = S.snap.f || {}, tc = it[F.tc] || it[F.t];
-    return {
+    var T0 = {
       kind: 'f', k: it[F.k] === 'r' ? 'rt' : 'ow', f: it[F.f], fn: nameOf(it[F.f]), t: it[F.t], tc: tc, tn: nameOf(tc), cc: ccOf(tc), cn: countryOf(tc),
       d1: it[F.d1], d2: it[F.d2] || '', dep: hhmm(it[F.d1]), arr: it[F.a1], as: it[F.s1], m1: it[F.m1], x: it[F.x],
       rdep: hhmm(it[F.d2]), rarr: it[F.a2], rs: it[F.s2], m2: it[F.m2], xb: it[F.xb],
       al: it[F.al], aln: (S.snap.aln || {})[it[F.al]] || it[F.al], p: it[F.p], u: it[F.u], dc: it[F.dc], tk: it[F.tk],
       rd: it[F.rd] || null, px: f.px || S.snap.df.px, src: it[F.src], ago: it[F.ago], mm: it[F.mm] || [], m0: f.m0
     };
+    return withMix(T0, mixFrom(it[F.mx]));
   }
   function ticketFromSaved(sv) {
     var tc = sv[SV.tc] || sv[SV.t];
@@ -665,6 +691,7 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
       al: '', aln: o.al || '', p: o.pp, u: o.bl || 0, dc: o.dc || 0, tk: o.tot, rd: o.r ? [o.r[0], o.r[1], o.r[2], o.r[3], 0] : null,
       px: o.px || [1, 0, 0], url: o.url, mode: o.m, src: o.src === 'so' ? 's' : '', seen: o.seen || null
     };
+    if (o.mx) { t.mx = mixFrom(o.mx); t.ab = o.ab || ''; }
     return Object.assign(t, extra || {});
   }
   function paxCount(px) { return Math.max(1, px[0] + px[1]); }
@@ -677,6 +704,11 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     if (T.d2) { var d2 = pd(T.d2); code += String(d2.getDate()).padStart(2, '0') + String(d2.getMonth() + 1).padStart(2, '0'); }
     return 'https://www.aviasales.ru/search/' + code + paxDigits(T.px || [1, 0, 0]);
   }
+  function searchUrl(from, iso, to, px) {
+    var d = pd(iso);
+    return 'https://www.aviasales.ru/search/' + from + String(d.getDate()).padStart(2, '0') + String(d.getMonth() + 1).padStart(2, '0') + to + paxDigits(px || [1, 0, 0]);
+  }
+  function mixUrls(T) { return [searchUrl(T.f, T.d1, T.tc, T.px), searchUrl(T.mx.bf || T.tc, T.d2, T.mx.b, T.px)]; }
   function savePayload(T) {
     var o = { k: T.k, f: T.f, t: T.t, tc: T.tc, d1: T.d1.slice(0, 16), p: T.p };
     if (T.d2) o.d2 = T.d2.slice(0, 16);
@@ -701,6 +733,13 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     if (hour >= 16 && hour < 20) return '<span class="sun low" aria-hidden="true"></span>';
     return '<span class="stars" aria-hidden="true"></span>';
   }
+  function agoChip(min) {
+    if (min == null) return '';
+    if (min < 5) return 'проверено только что';
+    if (min < 60) return 'проверено ' + min + NB + 'мин назад';
+    var h = Math.floor(min / 60);
+    return h < 48 ? 'проверено ' + h + NB + 'ч назад' : 'проверено ' + Math.floor(h / 24) + NB + 'дн назад';
+  }
   function agoShort(min) {
     if (min == null) return '';
     if (min < 60) return min < 5 ? 'только что' : count(min, 'минуту', 'минуты', 'минут') + ' назад';
@@ -721,14 +760,15 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     if (T.k === 'rt' && T.d2) when = rangeText(d1, pd(T.d2)) + ', ' + count(nights({ d1: T.d1, d2: T.d2 }), 'ночь', 'ночи', 'ночей');
     var country = (flagOf(T.cc) + ' ' + (T.cn || '')).trim(), visa = visaShort(T.cc);
     var chip = country ? '<span class="glass">' + esc(country + (visa && visa !== 'Россия' ? ', ' + visa : '')) + '</span>' : '<span></span>';
-    var right = T.ago != null && T.kind !== 's' ? '<span class="glass dark">' + esc(agoShort(T.ago)) + '</span>' : '';
+    var right = T.ago != null && T.kind !== 's' ? '<span class="glass dark">' + esc(agoChip(T.ago)) + '</span>' : '';
     var fromName = shortCity(T.fn);
-    var meta = opts.full ? (T.k === 'rt' ? 'Туда-обратно, ' + when : (when.charAt(0).toUpperCase() + when.slice(1)) + ', в одну сторону')
+    var meta = opts.full ? (T.k === 'rt' ? (T.mx ? 'Двумя билетами, ' : 'Туда-обратно, ') + when : (when.charAt(0).toUpperCase() + when.slice(1)) + ', в одну сторону')
       : when + (T.k === 'rt' ? '' : ', вылет ' + esc(T.dep)) + ', ' + tripStops(T);
+    if (T.mx && !sameAirport(T)) meta += ', обратно в ' + codeName(T, T.mx.b);
     var html = '<div class="sky" style="background:' + sky(hour) + '">' + decor(hour) +
       '<div class="sky-top">' + chip + right + '</div>' +
       '<div class="codes"><div class="pt"><span class="code">' + esc(T.f) + '</span><em>' + esc(fromName) + '</em></div>' +
-      '<div class="fly"><span>' + PLANE + (opts.full || !T.m1 ? '' : ' ' + duration(T.m1)) + '</span></div>' +
+      '<div class="fly"><i>' + PLANE + '</i>' + (opts.full || !T.m1 ? '' : '<small>' + duration(T.m1) + '</small>') + '</div>' +
       '<div class="pt r"><span class="code">' + esc(T.t) + '</span><em>' + esc(T.tn) + '</em></div></div>' +
       '<div class="meta">' + meta + '</div></div>';
     if (opts.full) {
@@ -741,12 +781,12 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
         '<div class="f"><i>Багаж</i><b>' + (T.px && S.snap.df && S.snap.df.bg === 'bag' ? 'с доплатой' : 'уточняйте') + '</b></div></div>';
       if (T.k === 'rt' && T.d2) {
         html += '<div class="fields back"><div class="f"><i>Обратно</i><b class="num">' + esc(T.rdep || '—') + '</b></div>' +
-          '<div class="f"><i>Прилёт домой</i><b class="num">' + (T.rarr ? esc(T.rarr) + (T.rs ? ' +' + T.rs : '') : '—') + '</b></div>' +
+          '<div class="f"><i>' + (T.mx && !sameAirport(T) ? 'Прилёт в ' + esc(T.mx.b) : 'Прилёт домой') + '</i><b class="num">' + (T.rarr ? esc(T.rarr) + (T.rs ? ' +' + T.rs : '') : '—') + '</b></div>' +
           '<div class="f"><i>Рейс</i><b>' + stopsText(T.xb) + '</b></div></div>';
       }
     }
-    var small = 'за человека' + (T.k === 'rt' ? ', туда-обратно' : '');
-    if (T.u && T.dc) small += ', обычно ≈ ' + money(T.u);
+    var small = 'за человека' + (T.mx ? ', двумя билетами' : T.k === 'rt' ? ', туда-обратно' : '');
+    if (T.u && T.dc) small += ', обычно ' + approx(T.u);
     if (!opts.full && T.rd) small += '<br>' + whoText(T.px) + ' с дорогой ' + approx(doorOf(T)) + (T.rd[4] >= 180 ? ', до ' + esc(shortCity(T.fn)) + ' ' + duration(T.rd[4]).replace(/ \d+\s?мин/, '') + ' в пути' : '');
     else if (!opts.full && paxCount(T.px) > 1 && T.tk) small += '<br>' + whoText(T.px) + ' ≈ ' + money(T.tk);
     if (opts.full && T.kind === 's') small += '<br>' + savedLine(T);
@@ -766,7 +806,8 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     else if (T.dep) when += ', ' + T.dep;
     var tags = T.x < 0 || (T.k === 'rt' && T.xb < 0) ? '' : '<span class="tag">' + tripStops(T) + '</span>';
     if (T.src === 's') tags = '<span class="tag hot">спецпредложение</span>' + tags;
-    if (T.k === 'rt') tags += '<span class="tag">туда-обратно</span>';
+    if (T.mx) tags = '<span class="tag go">' + (sameAirport(T) ? 'два билета' : 'обратно в ' + esc(T.mx.b)) + '</span>' + tags;
+    else if (T.k === 'rt') tags += '<span class="tag">туда-обратно</span>';
     var v = visaOf(T.cc);
     if (T.cc && T.cc !== 'RU' && v && v[0] !== 'f') tags += '<span class="tag">' + VISA_TEXT[v[0]] + '</span>';
     if (T.rd && T.rd[4] >= 180) tags += '<span class="tag warn">+' + duration(T.rd[4]).replace(/ \d+\s?мин/, '') + ' до ' + esc(shortCity(T.fn)) + '</span>';
@@ -801,7 +842,7 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     var s = S.snap, f = s.f, ff = S.ff, h = s.h;
     var origins = [];
     (f && f.it || []).forEach(function (it) { if (origins.indexOf(it[F.f]) < 0) origins.push(it[F.f]); });
-    var sub = h ? 'Из ' + count(origins.length || (s.a || []).length, 'аэропорта', 'аэропортов', 'аэропортов') + ' рядом с ' + esc(nearCity(h.n)) : 'Выберите город в настройках';
+    var sub = h ? 'Из ' + count(origins.length || enabledCodes().length, 'аэропорта', 'аэропортов', 'аэропортов') + ' рядом ' + withPrep(nearCity(h.n)) : 'Выберите город в настройках';
     var html = '<section class="hero"><h1 class="h1">Горячее</h1><p class="lead">' + sub + '</p></section>';
     html += '<div class="chips scroll" role="group" aria-label="Фильтры">' + chip('fkind', 'all', 'Все', ff.kind === 'all') + chip('fkind', 'ow', 'В одну сторону', ff.kind === 'ow') +
       chip('fkind', 'rt', 'Туда-обратно', ff.kind === 'rt') + chip('fflag', 'direct', 'Прямые', ff.direct) + chip('fflag', 'visa', 'Без визы', ff.visa) +
@@ -826,14 +867,16 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     var top = list[0];
     html += '<button type="button" class="pass" data-act="deal" data-src="f" data-idx="' + top.idx + '" aria-label="Лучшее: ' + esc(top.tn) + ', ' + money(top.p) + '">' + passHtml(top) + '</button>';
     if (list.length > 1) {
-      var more = list.length - 1 + (S.ff.kind === 'all' && !S.ff.direct && !S.ff.visa && !S.ff.budget && S.ff.ap === 'all' ? Math.max(0, (f.n || 0) - f.it.length) : 0);
-      html += '<section class="group"><div class="cap-row"><h2 class="cap">Ещё ' + count(more, 'билет', 'билета', 'билетов') + '</h2>' +
+      html += '<section class="group"><div class="cap-row"><h2 class="cap">Ещё ' + count(list.length - 1, 'билет', 'билета', 'билетов') + '</h2>' +
         '<button type="button" class="link" data-act="fsort">' + (ff.sort === 'price' ? 'сначала дешёвые' : 'сначала выгодные') + '</button></div><div class="feed">' +
         list.slice(1).map(function (T) { return cardHtml(T, 'data-act="deal" data-src="f" data-idx="' + T.idx + '"'); }).join('') + '</div></section>';
     }
-    html += '<p class="note">Цены за человека из данных Aviasales' + (f.at ? ' на ' + esc(f.at.slice(11, 16)) : '') + '. Обновляю каждые 3 часа, о самых выгодных пишу в чат сразу. «Обычно» — по истории цен за 2 месяца.</p>';
+    var shown = f.n > f.it.length ? 'Здесь ' + f.it.length + ' самых выгодных из ' + count(f.n, 'найденного билета', 'найденных билетов', 'найденных билетов') + '. ' : '';
+    html += '<p class="note">' + shown + 'Цены за человека — из поисков на Aviasales за последние двое суток' + (f.at ? ', проверены в ' + esc(f.at.slice(11, 16)) : '') + '; обновляю каждые 3 часа. Вылеты раньше чем через 3 дня не показываю: дешёвые места на них почти всегда раскуплены. «Обычно» — типичная самая низкая цена этого направления за прошлые дни; пока истории меньше 4 дней, скидку не показываю.' +
+      (S.snap.mx ? ' «Обратно в …» — два билета в одну сторону, так дешевле с дорогой.' : '') + '</p>';
     return { html: html };
   }
+  function withPrep(name) { return (/^[сзшжщ][^аеёиоуыэюя]/i.test(name) ? 'со ' : 'с ') + esc(name); }
   function nearCity(n) {
     var map = { 'Ставрополь': 'Ставрополем', 'Краснодар': 'Краснодаром', 'Москва': 'Москвой', 'Пятигорск': 'Пятигорском', 'Ростов-на-Дону': 'Ростовом-на-Дону' };
     return map[n] || n;
@@ -925,6 +968,26 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     var title = (n === 1 ? 'Одному' : n === 2 ? 'Вдвоём' : 'На ' + n) + (T.rd ? ' от двери ' + approx(tickets + T.rd[0]) : ' ' + money(tickets));
     return '<section class="card pad" aria-label="Итог"><h2 style="margin:0;font-family:var(--display);font-size:20px;line-height:25px;font-weight:800;letter-spacing:-.3px">' + title + '</h2><dl class="kv">' + rows + '</dl></section>';
   }
+  function mixBox(T) {
+    var m = T.mx, n = paxCount(T.px), ax = m.ax ? '≈' + NB : '';
+    var d1 = pd(T.d1), d2 = pd(T.d2), each = function (v) { return (n > 1 ? n + NB + '×' + NB : '') + money(v); };
+    var rows = '<dt>Билет туда, ' + esc(T.f) + ' → ' + esc(T.t) + ', ' + dayShort(d1) + '</dt><dd class="num">' + each(m.p1) + '</dd>' +
+      '<dt>Билет обратно, ' + esc(m.bf || T.t) + ' → ' + esc(m.b) + ', ' + dayShort(d2) + '</dt><dd class="num">' + each(m.p2) + '</dd>' +
+      '<dt>Билеты вместе</dt><dd class="num">' + ax + money(m.tk) + '</dd>';
+    m.rd.forEach(function (r, i) {
+      if (!r[1]) return;
+      var name = r[2] ? r[2].charAt(0).toUpperCase() + r[2].slice(1) : 'Дорога';
+      var where = r[6] === 2 ? ' до ' + esc(r[0]) + ' и обратно' : i === 0 ? ' до ' + esc(r[0]) : ' из ' + esc(r[0]) + ' домой';
+      rows += '<dt>' + esc(name) + where + (r[5] ? ', ' + duration(r[5]) : '') + '</dt><dd class="num">' + (r[4] ? '≈' + NB : '') + money(r[1]) + '</dd>';
+    });
+    if (m.rt && m.rt > m.dr) rows += '<dt>Туда-обратно вышло бы</dt><dd class="num muted">≈' + NB + money(Math.round(m.rt / 100) * 100) + '</dd>';
+    var who = n === 1 ? 'Одному' : n === 2 ? 'Вдвоём' : 'На ' + n;
+    var title = who + (m.road ? ' от двери ' + approx(m.dr) : ' ' + ax + money(m.tk));
+    var saving = m.rt && m.rt > m.dr ? '<span class="tag go" style="align-self:flex-start">дешевле на ' + money(Math.round((m.rt - m.dr) / 100) * 100) + '</span>' : '';
+    var note = 'Два отдельных билета — купите оба, кнопки внизу.' + (sameAirport(T) ? '' : ' Своя машина тут не считается: её не забрать в другом аэропорту.');
+    return '<section class="card pad" aria-label="Итог"><h2 style="margin:0;font-family:var(--display);font-size:20px;line-height:25px;font-weight:800;letter-spacing:-.3px">' + title + '</h2>' + saving +
+      '<dl class="kv">' + rows + '</dl><p class="muted" style="margin:0;font-size:13px;line-height:18px">' + note + '</p></section>';
+  }
   function screenDeal(p) {
     var ctx = dealContext(p);
     if (!ctx) return { html: '<div class="card empty"><b>Подробностей нет</b><span class="muted">Откройте этот билет из сообщения бота в чате.</span></div>' };
@@ -932,7 +995,11 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     var html = '<h1 class="sr">' + esc(T.fn + ' — ' + T.tn + ', ' + dayShort(pd(T.d1))) + '</h1>';
     html += ctx.ti ? '<p class="muted" style="margin:0 6px;font-size:13px;line-height:18px">' + (ctx.best ? 'Лучшее по отслеживанию' : 'Находка по отслеживанию') + ' «' + esc(ctx.ti) + '»</p>' : '';
     html += '<div class="pass full">' + passHtml(T, { full: true }) + '</div>';
-    if (o) {
+    if (T.mx) {
+      html += mixBox(T);
+      if (o) html += doorSection(o, 'Туда-обратно из ваших аэропортов', 'Для сравнения: тот же месяц, с дорогой');
+      else if (T.kind === 'f') html += monthsBars(T);
+    } else if (o) {
       var total = door(o), ax = o.ax ? '≈' + NB : '';
       var rows = '<dt>Билеты' + ((o.px && (o.px[0] + o.px[1] > 1)) ? ', ' + (o.px[0] + o.px[1]) + ' × ' + money(o.pp) : '') + '</dt><dd class="num">' + ax + money(o.tot) + '</dd>';
       if (o.r) {
@@ -967,9 +1034,15 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
           return '<button type="button" class="chip" data-act="return" data-w="' + w[0] + '" data-deal="' + ctx.id + '">' + w[1] + '</button>';
         }).join('') + '</div><p class="muted" style="margin:0;font-size:13px;line-height:18px">Напишу, когда обратный билет станет дешевле обычного.</p></div></section>';
     }
-    var fresh = T.kind === 's' ? savedLine(T) : T.ago != null ? 'цена из данных Aviasales, найдена ' + agoShort(T.ago) : 'цена из данных Aviasales' + (S.snap && S.snap.at && p.src !== 'x' ? ' на ' + esc(S.snap.at.slice(11, 16)) : '');
-    html += '<p class="note">' + fresh.charAt(0).toUpperCase() + fresh.slice(1) + '. Это кэш поисков: точную цену и наличие покажет Aviasales — проверьте перед покупкой. Время местное, багаж уточняйте на сайте.</p>';
+    var fresh = T.kind === 's' ? savedLine(T) : 'цена из поисков на Aviasales за последние двое суток' + (T.ago != null ? ', бот проверил её ' + agoShort(T.ago) : S.snap && S.snap.at && p.src !== 'x' ? ', данные на ' + esc(S.snap.at.slice(11, 16)) : '');
+    var many = paxCount(T.px) > 1 ? ' Цена указана за одного: если по ней осталось мало мест, на ' + paxCount(T.px) + ' выйдет дороже.' : '';
+    html += '<p class="note">' + fresh.charAt(0).toUpperCase() + fresh.slice(1) + '. Это не живой поиск: дешёвые места быстро раскупают — точную цену и наличие покажет Aviasales.' + many + ' Время местное, багаж уточняйте на сайте.</p>';
     if (S.mode !== 'full') html += '<p class="note">Сохранить в избранное и изменить отслеживания можно, открыв приложение кнопкой «✈️ Открыть приложение» внизу чата.</p>';
+    if (T.mx) {
+      var urls = mixUrls(T);
+      return { html: html, main: { text: 'Купить билет туда', hot: true, action: function () { openLink(urls[0]); } },
+        second: { text: 'Купить билет обратно', pos: 'bottom', action: function () { openLink(urls[1]); } } };
+    }
     var second = null;
     if (S.mode === 'full') {
       if (T.kind === 's') second = { text: 'Убрать из избранного', action: function () { confirmBox('Убрать «' + T.tn + ', ' + dayShort(pd(T.d1)) + '» из избранного?', 'Убрать').then(function (ok) { if (ok) send({ op: 'unsave', id: T.id }); }); } };
@@ -1026,6 +1099,7 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
       case 'visa': return p.visa || s.vm;
       case 'dh': return 'dh' in p ? p.dh : (s.nt ? s.nt[0] : 9);
       case 'inst': return 'inst' in p ? p.inst : !!(s.nt ? s.nt[1] : 1);
+      case 'mix': return 'mix' in p ? p.mix : !!s.mx;
     }
     return null;
   }
@@ -1050,6 +1124,7 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
       case 'visa': same = value === s.vm; break;
       case 'dh': same = value === (s.nt ? s.nt[0] : 9); break;
       case 'inst': same = value === !!(s.nt ? s.nt[1] : 1); break;
+      case 'mix': same = value === !!s.mx; break;
     }
     if (same) delete S.pending[key]; else S.pending[key] = value;
     touchPending();
@@ -1109,9 +1184,10 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     var b = t.b;
     if (!b) return t.lc ? 'подходящих билетов пока нет' : 'ещё не проверялось';
     var when = nowrap(rangeText(pd(b.d1), b.d2 ? pd(b.d2) : null));
-    if (t.m === 'city') return 'лучшее из ' + esc(b.f) + ', ' + when;
+    var back = b.mx && b.mx[0] !== b.f ? ', обратно в ' + esc(b.mx[0]) : '';
+    if (t.m === 'city') return 'лучшее из ' + esc(b.f) + back + ', ' + when;
     if (t.m === 'return') return 'лучшее: прилёт в ' + esc(b.r ? b.r[5] || b.t : b.t) + ', ' + when;
-    return 'лучшее: ' + esc(b.tn || '') + ' из ' + esc(b.f) + ', ' + when;
+    return 'лучшее: ' + esc(b.tn || '') + ' из ' + esc(b.f) + back + ', ' + when;
   }
 
   function doorRows(rows, own) {
@@ -1473,7 +1549,7 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
       '<div style="padding:12px 16px 14px;display:flex;flex-direction:column;gap:10px"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><label for="radius">Искать аэропорты в радиусе</label><span class="num" id="radius-val" style="font-weight:600">' + r + NB + 'км</span></div>' +
       '<div class="slider"><span class="track"></span><span class="fill" id="radius-fill" style="left:0;right:calc(14px + (100% - 28px) * ' + (1 - (r - 50) / (maxR - 50)).toFixed(4) + ')"></span><input id="radius" type="range" min="50" max="' + maxR + '" step="10" value="' + r + '" data-in="radius"></div>' +
       '<div class="scale num"><span>50 км</span><span>' + maxR + ' км</span></div></div>' +
-      '<button type="button" class="row tall" data-act="go" data-to="airports" data-from="settings"><span class="grow"><span class="title">Аэропорты и дорога</span><span class="sub">' + esc(aps.codes.join(', ') || 'ни один не выбран') + '</span></span><span class="val num">' + aps.text + '</span>' + ICON.chev + '</button>' +
+      '<button type="button" class="row tall" data-act="go" data-to="airports" data-from="settings"><span class="grow"><span class="title">Аэропорты и дорога</span><span class="sub">' + esc(aps.codes.join(', ') || 'ни один не выбран') + (setting('mix') ? ', обратно в другой' : '') + '</span></span><span class="val num">' + aps.text + '</span>' + ICON.chev + '</button>' +
       '<button type="button" class="row" data-act="go" data-to="car"><span style="flex:1">Своя машина</span><span class="val num">' + (car[0] ? String(car[0]).replace('.', ',') + NB + 'л на 100' + NB + 'км' : 'не учитывать') + '</span>' + ICON.chev + '</button></div>' +
       '<p class="note">Радиус и город меняют список аэропортов — бот пересчитает его после сохранения.</p></section>';
     html += '<section class="group" aria-labelledby="s-new"><h2 class="cap" id="s-new">Для новых отслеживаний</h2><div class="card"><button type="button" class="row tall" data-act="go" data-to="defaults"><span class="grow"><span class="title">Пассажиры, багаж и условия</span><span class="sub">' +
@@ -1581,6 +1657,7 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
         return item + '</div>';
       }).join('') + '</section>';
     }
+    if (all.length) html += '<section class="card list" style="margin-top:12px" aria-label="Обратно — в другой аэропорт"><div class="row tall"><span class="grow"><span class="title" id="mix-l">Обратно — в другой аэропорт</span><span class="sub">Туда из одного вашего аэропорта, обратно в другой или двумя билетами в одну сторону — если так дешевле с дорогой. Своя машина в такой поездке не считается.</span></span><button type="button" class="switch" role="switch" aria-checked="' + !!setting('mix') + '" aria-labelledby="mix-l" data-act="mixret"></button></div></section>';
     var people = Math.max(1, S.snap.df.px[0] + S.snap.df.px[1]);
     html += '<p class="note">Цены дороги — туда и обратно для ' + count(people, 'пассажира', 'пассажиров', 'пассажиров') + ', поездка на неделю. Нажмите на аэропорт, чтобы выбрать, как добираться. Автобусы и поезда — <a href="https://rasp.yandex.ru/" data-act="link" data-url="https://rasp.yandex.ru/">Яндекс Расписания</a>, дороги — © участники OpenStreetMap.</p>';
     var main;
@@ -1632,6 +1709,7 @@ radial-gradient(1px 1px at 45% 12%,#fff,transparent),radial-gradient(1px 1px at 
     fap: function (d) { S.ff.ap = d.v; haptic('select'); rerender(); },
     fsort: function () { S.ff.sort = S.ff.sort === 'price' ? 'value' : 'price'; haptic('select'); rerender(); },
     inst: function () { setPending('inst', !setting('inst')); haptic('select'); rerender(); },
+    mixret: function () { setPending('mix', !setting('mix')); haptic('select'); rerender(); },
     deal: function (d) { go('deal', { src: d.src, id: d.id ? +d.id : null, idx: d.idx != null ? +d.idx : null }); },
     chart: function (d) { S.chartDays = +d.days; haptic('select'); rerender(); },
     check: function (d) { send({ op: 'track.check', id: +d.id }); },
